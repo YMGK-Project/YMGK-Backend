@@ -1,9 +1,17 @@
 package proje.v1.api.base.messages;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Response<T> {
 
-    private short statusCode;
+    private int statusCode;
     private boolean isSuccess;
-    private String message;
     private T result;
 }

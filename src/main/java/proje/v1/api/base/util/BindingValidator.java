@@ -2,6 +2,7 @@ package proje.v1.api.base.util;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import proje.v1.api.exceptionhandler.base.BadRequestExcepiton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class BindingValidator {
             bindingResult.getFieldErrors().forEach(error -> {
                 errors.add(error.getField());
             });
-            //throw new BadRequestExcepiton(errors.toString());
+            throw new BadRequestExcepiton(errors.toString());
         }
     }
 }
