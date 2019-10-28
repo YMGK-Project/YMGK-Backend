@@ -5,8 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import proje.v1.api.base.messages.Response;
-import proje.v1.api.exceptionhandler.base.BadRequestExcepiton;
-import proje.v1.api.exceptionhandler.base.ForbiddenException;
 
 @ControllerAdvice
 public class CustomExceptionHandler {
@@ -21,5 +19,17 @@ public class CustomExceptionHandler {
     public ResponseEntity<Response<String>> badRequestException(Exception exception){
         Response<String> response = new Response<>(400, false, exception.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Response<String>> notFoundException(Exception exception){
+        Response<String> response = new Response<>(404,false,exception.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<Response<String>> unAuthorizedException(Exception exception){
+        Response<String> response = new Response<>(401, false, exception.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 }

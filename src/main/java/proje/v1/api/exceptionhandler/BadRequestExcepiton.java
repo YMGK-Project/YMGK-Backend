@@ -1,4 +1,4 @@
-package proje.v1.api.exceptionhandler.base;
+package proje.v1.api.exceptionhandler;
 
 public class BadRequestExcepiton extends RuntimeException {
 

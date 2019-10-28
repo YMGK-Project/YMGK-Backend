@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import proje.v1.api.base.util.Crypt;
+import proje.v1.api.domian.Secretary.Secretary;
+import proje.v1.api.domian.Secretary.SecretaryRepository;
 import proje.v1.api.domian.Teacher.Teacher;
 import proje.v1.api.domian.student.Student;
 import proje.v1.api.domian.user.UserRole;
@@ -25,7 +27,17 @@ public class SecretaryService {
     private TeacherService teacherService;
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private SecretaryRepository secretaryRepository;
 
+    public void testSecretary(){
+        Secretary secretary = new Secretary();
+        Secretary secretary1 = secretaryRepository.save(secretary);
+        Users user = new Users("hasanatasoy", Crypt.hashWithSha256("12345678"), "hasan", "atasoy");
+        user.setUserRole(UserRole.Secretary);
+        user.setSecretary(secretary1);
+        usersRepository.save(user);
+    }
 
     public Users saveTeacher(String username, String password, String name, String surname) {
         Teacher teacher = new Teacher();
@@ -38,9 +50,6 @@ public class SecretaryService {
         return user;
     }
 
-    public void checkPermission(Principal userPrincipal) {
-    }
-
     public Users saveStudent(String username, String password, String fingerMark, String name, String surname) {
         Student student = new Student();
         String fingerMarkWithHash = Crypt.hashWithSha256(fingerMark);
@@ -50,6 +59,7 @@ public class SecretaryService {
         Users user = new Users(username, passwordWithHash, name, surname);
         user.setStudent(student1);
         user.setUserRole(UserRole.Student);
+        usersRepository.save(user);
         return user;
     }
 }
