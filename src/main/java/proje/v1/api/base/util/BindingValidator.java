@@ -14,9 +14,7 @@ public class BindingValidator {
 
         if(bindingResult.hasErrors()){
             List<String> errors = new ArrayList<>();
-            bindingResult.getFieldErrors().forEach(error -> {
-                errors.add(error.getField());
-            });
+            bindingResult.getFieldErrors().forEach(error -> errors.add(error.getField()));
             throw new BadRequestExcepiton("UnValidType : "+errors.toString());
         }
     }

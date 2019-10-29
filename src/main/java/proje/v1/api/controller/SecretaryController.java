@@ -1,7 +1,6 @@
 package proje.v1.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.DigestUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import proje.v1.api.auth.ContextHolder;
 import proje.v1.api.base.messages.Response;
 import proje.v1.api.base.util.BindingValidator;
-import proje.v1.api.domian.Teacher.Teacher;
 import proje.v1.api.domian.user.Users;
 import proje.v1.api.message.RequestStudent;
 import proje.v1.api.message.RequestTeacher;
@@ -19,8 +17,6 @@ import proje.v1.api.service.SecretaryService;
 import proje.v1.api.service.UserService;
 
 import javax.validation.Valid;
-import java.nio.file.attribute.UserPrincipal;
-import java.security.Principal;
 
 @RestController
 @RequestMapping(value = "/secretary")
@@ -35,7 +31,7 @@ public class SecretaryController {
     private String SECRETARY = "Secretary";
 
     @RequestMapping(value = "/add/teacher", method = RequestMethod.POST)
-    public Response<Users> addTeacher(@Valid @RequestBody RequestTeacher requestTeacher, BindingResult bindingResult){
+    public Response<Users> addTeacher(@Valid @RequestBody RequestTeacher requestTeacher, BindingResult bindingResult) {
         BindingValidator.validate(bindingResult);
         roleService.validatePermission(ContextHolder.user, SECRETARY);
         userService.validateUserIsNotExist(requestTeacher.getUsername());
@@ -48,7 +44,7 @@ public class SecretaryController {
     }
 
     @RequestMapping(value = "/add/student", method = RequestMethod.POST)
-    public Response<Users> addStudent(@Valid @RequestBody RequestStudent requestStudent, BindingResult bindingResult){
+    public Response<Users> addStudent(@Valid @RequestBody RequestStudent requestStudent, BindingResult bindingResult) {
         BindingValidator.validate(bindingResult);
         roleService.validatePermission(ContextHolder.user, SECRETARY);
         userService.validateUserIsNotExist(requestStudent.getUsername());
