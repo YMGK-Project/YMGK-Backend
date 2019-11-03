@@ -5,5 +5,4 @@ import proje.v1.api.domian.user.Users;
 public class ContextHolder {
 
     public static Users user;
-    public static int loginAttemptCount;
 }

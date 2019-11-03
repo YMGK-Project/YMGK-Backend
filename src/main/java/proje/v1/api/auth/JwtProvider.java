@@ -16,7 +16,7 @@ public class JwtProvider {
 
     @Value("$(secret-key)")
     private String secretKey;
-    private int expiration = 120000;
+    private int expiration = 600000;
 
     String getJwtFromHeader(String authHeader){
         if(authHeader != null && authHeader.startsWith(SecurityConstants.TOKEN_PREFIX))

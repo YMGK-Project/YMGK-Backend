@@ -1,22 +1,15 @@
 package proje.v1.api.service;
 
-import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 import proje.v1.api.base.util.Crypt;
-import proje.v1.api.domian.Secretary.Secretary;
-import proje.v1.api.domian.Secretary.SecretaryRepository;
-import proje.v1.api.domian.Teacher.Teacher;
+import proje.v1.api.domian.secretary.Secretary;
+import proje.v1.api.domian.secretary.SecretaryRepository;
+import proje.v1.api.domian.teacher.Teacher;
 import proje.v1.api.domian.student.Student;
 import proje.v1.api.domian.user.UserRole;
 import proje.v1.api.domian.user.Users;
 import proje.v1.api.domian.user.UsersRepository;
-import proje.v1.api.message.RequestTeacher;
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.attribute.UserPrincipal;
-import java.security.Principal;
 
 @Service
 public class SecretaryService {

@@ -1,4 +1,4 @@
-package proje.v1.api.domian.Secretary;
+package proje.v1.api.domian.secretary;
 
 import proje.v1.api.base.domain.BaseModel;
 

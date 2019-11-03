@@ -1,12 +1,10 @@
 package proje.v1.api.domian.user;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import proje.v1.api.base.domain.BaseModel;
-import proje.v1.api.domian.Secretary.Secretary;
-import proje.v1.api.domian.Teacher.Teacher;
+import proje.v1.api.domian.secretary.Secretary;
+import proje.v1.api.domian.teacher.Teacher;
 import proje.v1.api.domian.student.Student;
 
 import javax.persistence.*;
