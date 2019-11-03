@@ -20,12 +20,13 @@ public class UserService {
         return userRepository.findById(username);
     }
 
-    public void validateLogin(String username, String password) {
+    public void validateUser(String username, String password) {
         Optional<Users> user = userRepository.findById(username);
         boolean userIsExist = user.isPresent();
         if(!userIsExist)
             throw new NotFoundException("User not exist with : "+username);
-        if(!(user.get().getPassword().equals(Crypt.hashWithSha256(password))))
+        String passWithHashing = Crypt.hashWithSha256(password);
+        if(!(user.get().getPassword().equals(passWithHashing)))
             throw new BadRequestExcepiton("Password is not correct");
     }
 
@@ -34,4 +35,11 @@ public class UserService {
         if(userIsExist)
             throw new BadRequestExcepiton("Username already taken as : "+username);
     }
+
+    public void resetPassword(String username, String newPassword) {
+        Users user = userRepository.findById(username).get();
+        user.setPassword(Crypt.hashWithSha256(newPassword));
+        userRepository.save(user);
+    }
+
 }

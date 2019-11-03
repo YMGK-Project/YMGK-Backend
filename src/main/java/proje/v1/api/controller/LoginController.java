@@ -25,10 +25,10 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/1", method = RequestMethod.POST)
+    @RequestMapping(value = "/user", method = RequestMethod.POST)
     public Response<String> login(@Valid @RequestBody RequestLogin requestLogin, BindingResult bindingResult){
         BindingValidator.validate(bindingResult);
-        userService.validateLogin(requestLogin.getUsername(), requestLogin.getPassword());
+        userService.validateUser(requestLogin.getUsername(), requestLogin.getPassword());
         return new Response<>(200, true, jwtProvider.generateJsonWebToken(requestLogin.getUsername()));
     }
     @RequestMapping(value = "/test", method = RequestMethod.GET)
