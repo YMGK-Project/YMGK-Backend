@@ -15,7 +15,7 @@ import proje.v1.api.domian.user.UsersRepository;
 public class SecretaryService {
 
     @Autowired
-    private UsersRepository usersRepository;
+    private UserService userService;
     @Autowired
     private TeacherService teacherService;
     @Autowired
@@ -29,7 +29,7 @@ public class SecretaryService {
         Users user = new Users("hasanatasoy", Crypt.hashWithSha256("12345678"), "hasan", "atasoy");
         user.setUserRole(UserRole.Secretary);
         user.setSecretary(secretary1);
-        usersRepository.save(user);
+        userService.save(user);
     }
 
     public Users saveTeacher(String username, String password, String name, String surname) {
@@ -39,7 +39,7 @@ public class SecretaryService {
         Users user = new Users(username, passwordWithHash, name, surname);
         user.setTeacher(teacher1);
         user.setUserRole(UserRole.Teacher);
-        usersRepository.save(user);
+        userService.save(user);
         return user;
     }
 
@@ -52,7 +52,7 @@ public class SecretaryService {
         Users user = new Users(username, passwordWithHash, name, surname);
         user.setStudent(student1);
         user.setUserRole(UserRole.Student);
-        usersRepository.save(user);
+        userService.save(user);
         return user;
     }
 }

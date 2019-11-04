@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 public class RollCall extends BaseModel {
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Student> inComingStudents = new ArrayList<>();
 
 }
