@@ -1,6 +1,6 @@
 package proje.v1.api.domian.secretary;
 
-import proje.v1.api.base.domain.BaseModel;
+import proje.v1.api.common.domain.BaseModel;
 
 import javax.persistence.Entity;
 

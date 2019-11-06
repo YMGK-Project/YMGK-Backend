@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import proje.v1.api.base.domain.BaseModel;
+import proje.v1.api.common.domain.BaseModel;
 import proje.v1.api.domian.rollcall.RollCall;
 import proje.v1.api.domian.student.Student;
 
