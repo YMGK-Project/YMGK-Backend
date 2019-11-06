@@ -6,17 +6,15 @@ import proje.v1.api.common.domain.BaseModel;
 import proje.v1.api.domian.student.Student;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.OneToOne;
 
 @Getter
 @Setter
 @Entity
 public class RollCall extends BaseModel {
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Student> inComingStudents = new ArrayList<>();
+    @OneToOne
+    private Student student;
+    private boolean isHere;
 
 }
