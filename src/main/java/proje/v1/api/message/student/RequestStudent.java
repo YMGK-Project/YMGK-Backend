@@ -3,6 +3,7 @@ package proje.v1.api.message.student;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -10,14 +11,16 @@ import javax.validation.constraints.Size;
 @Setter
 public class RequestStudent {
 
+    @Email @NotNull @Size(min = 10, max = 30)
+    private String email;
     @NotNull @NotNull @Size(min = 6, max = 35)
-    String username;
+    private String username;
     @NotNull @Size(min = 6, max = 26)
-    String password;
+    private String password;
     @NotNull
-    String fingerMark;
+    private String fingerMark;
     @NotNull
-    String name;
+    private String name;
     @NotNull
-    String surname;
+    private String surname;
 }

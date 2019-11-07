@@ -19,6 +19,7 @@ public class UserService {
     public Optional<Users> findById(String username){
         return userRepository.findById(username);
     }
+    public Optional<Users> findByEmail(String email){ return userRepository.findByEmail(email); }
 
     public void validateUser(String username, String password) {
         Optional<Users> user = userRepository.findById(username);
@@ -34,6 +35,12 @@ public class UserService {
         boolean userIsExist = userRepository.findById(username).isPresent();
         if(userIsExist)
             throw new BadRequestExcepiton("Username already taken as : "+username);
+    }
+
+    public void validateUserExist(String email){
+        boolean userIsExist = userRepository.findByEmail(email).isPresent();
+        if(!userIsExist)
+            throw new NotFoundException("User not found with email : "+email);
     }
 
     public void resetPassword(String username, String newPassword) {

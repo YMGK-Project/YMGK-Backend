@@ -19,6 +19,7 @@ public class Users {
     @Id
     private String username;
     private String password;
+    private String email;
     private String name;
     private String surname;
     @Enumerated(EnumType.STRING)

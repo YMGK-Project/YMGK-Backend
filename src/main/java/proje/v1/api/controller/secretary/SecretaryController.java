@@ -36,6 +36,7 @@ public class SecretaryController {
         roleService.validatePermission(ContextHolder.user, SECRETARY);
         userService.validateUserIsNotExist(requestTeacher.getUsername());
         Users user = secretaryService.saveTeacher(
+                requestTeacher.getEmail(),
                 requestTeacher.getUsername(),
                 requestTeacher.getPassword(),
                 requestTeacher.getName(),
@@ -49,6 +50,7 @@ public class SecretaryController {
         roleService.validatePermission(ContextHolder.user, SECRETARY);
         userService.validateUserIsNotExist(requestStudent.getUsername());
         Users user = secretaryService.saveStudent(
+                requestStudent.getEmail(),
                 requestStudent.getUsername(),
                 requestStudent.getPassword(),
                 requestStudent.getFingerMark(),

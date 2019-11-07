@@ -34,18 +34,19 @@ public class SecretaryService {
         userService.save(user);
     }
 
-    public Users saveTeacher(String username, String password, String name, String surname) {
+    public Users saveTeacher(String email, String username, String password, String name, String surname) {
         Teacher teacher = new Teacher();
         Teacher teacher1 = teacherService.save(teacher);
         String passwordWithHash = Crypt.hashWithSha256(password);
         Users user = new Users(username, passwordWithHash, name, surname);
         user.setTeacher(teacher1);
         user.setUserRole(UserRole.Teacher);
+        user.setEmail(email);
         userService.save(user);
         return user;
     }
 
-    public Users saveStudent(String username, String password, String fingerMark, String name, String surname) {
+    public Users saveStudent(String email, String username, String password, String fingerMark, String name, String surname) {
         Student student = new Student();
         String fingerMarkWithHash = Crypt.hashWithSha256(fingerMark);
         student.setFingerMark(fingerMarkWithHash);
@@ -54,6 +55,7 @@ public class SecretaryService {
         Users user = new Users(username, passwordWithHash, name, surname);
         user.setStudent(student1);
         user.setUserRole(UserRole.Student);
+        user.setEmail(email);
         userService.save(user);
         return user;
     }

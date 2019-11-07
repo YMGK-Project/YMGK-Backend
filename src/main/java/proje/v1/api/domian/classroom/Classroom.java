@@ -12,15 +12,11 @@ import proje.v1.api.domian.student.Student;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
 @Getter
 @Setter
 @Entity
 public class Classroom extends BaseModel {
 
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Student> students;
     @OneToMany
     @Fetch(FetchMode.JOIN)
     private List<RollCall> rollCalls = new ArrayList<>();

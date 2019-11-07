@@ -18,10 +18,5 @@ public class Student extends BaseModel {
 
     private String fingerMark;
     @ManyToMany
-    @JoinTable(
-            name = "student_classroom",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "classroom_id")
-    )
     private List<Classroom> classrooms;
 }
