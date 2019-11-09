@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService {
+    //şifre sıfırlama için mail gönderen adres
+    private String mailAddress="mail@adres";
 
     @Autowired
     private JavaMailSender mailSender;
@@ -19,6 +21,16 @@ public class EmailService {
         simpleMailMessage.setTo(email);
         simpleMailMessage.setSubject("Şifre Sıfırlama İsteği");
         simpleMailMessage.setText("Şifrenizi değiştirmek için aşağıdaki linke tıklayınız.\n"+url);
+	simpleMailMessage.setFrom(mailAddress);
         mailSender.send(simpleMailMessage);
     }
+    public boolean checkPasswordChange(String pass1,String pass2) {
+	if(pass1.equals(pass2)) {
+
+		return true;
+	}
+	
+	return false;
+
+   }
 }
