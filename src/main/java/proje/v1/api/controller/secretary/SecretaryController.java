@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import proje.v1.api.config.auth.ContextHolder;
 import proje.v1.api.common.messages.Response;
 import proje.v1.api.common.util.BindingValidator;
+import proje.v1.api.converter.user.UserConverter;
 import proje.v1.api.domian.user.Users;
+import proje.v1.api.dto.user.UserDTO;
 import proje.v1.api.message.student.RequestStudent;
 import proje.v1.api.message.teacher.RequestTeacher;
 import proje.v1.api.service.user.RoleService;
@@ -27,35 +29,40 @@ public class SecretaryController {
     @Autowired
     private RoleService roleService;
     @Autowired
-    private UserService userService;
+    private UserConverter userConverter;
     private String SECRETARY = "Secretary";
 
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public void test(){
+        secretaryService.testSecretary();
+    }
+
     @RequestMapping(value = "/add/teacher", method = RequestMethod.POST)
-    public Response<Users> addTeacher(@Valid @RequestBody RequestTeacher requestTeacher, BindingResult bindingResult) {
+    public Response<UserDTO> addTeacher(@Valid @RequestBody RequestTeacher requestTeacher, BindingResult bindingResult) {
         BindingValidator.validate(bindingResult);
         roleService.validatePermission(ContextHolder.user, SECRETARY);
-        userService.validateUserIsNotExist(requestTeacher.getUsername());
-        Users user = secretaryService.saveTeacher(
+        Users user = secretaryService.saveTeacherAndGet(
                 requestTeacher.getEmail(),
                 requestTeacher.getUsername(),
                 requestTeacher.getPassword(),
                 requestTeacher.getName(),
                 requestTeacher.getSurname());
-        return new Response<>(200, true, user);
+        UserDTO userDTO = userConverter.convert(user);
+        return new Response<>(201, true, userDTO);
     }
 
     @RequestMapping(value = "/add/student", method = RequestMethod.POST)
-    public Response<Users> addStudent(@Valid @RequestBody RequestStudent requestStudent, BindingResult bindingResult) {
+    public Response<UserDTO> addStudent(@Valid @RequestBody RequestStudent requestStudent, BindingResult bindingResult) {
         BindingValidator.validate(bindingResult);
         roleService.validatePermission(ContextHolder.user, SECRETARY);
-        userService.validateUserIsNotExist(requestStudent.getUsername());
-        Users user = secretaryService.saveStudent(
+        Users user = secretaryService.saveStudentAndGet(
                 requestStudent.getEmail(),
                 requestStudent.getUsername(),
                 requestStudent.getPassword(),
                 requestStudent.getFingerMark(),
                 requestStudent.getName(),
                 requestStudent.getSurname());
-        return new Response<>(200, true, user);
+        UserDTO userDTO = userConverter.convert(user);
+        return new Response<>(201, true, userDTO);
     }
 }

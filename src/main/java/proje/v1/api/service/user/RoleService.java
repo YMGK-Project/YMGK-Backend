@@ -2,14 +2,17 @@ package proje.v1.api.service.user;
 
 import org.springframework.stereotype.Service;
 import proje.v1.api.domian.user.Users;
+import proje.v1.api.exception.ForbiddenException;
 import proje.v1.api.exception.NotFoundException;
 import proje.v1.api.exception.UnauthorizedException;
 
 @Service
 public class RoleService {
     public void validatePermission(Users user, String role) {
-        if(user == null || !(user.getUserRole().toString().equals(role)))
-            throw new UnauthorizedException("Bu işlemi gerçekleştirmek için yetkiniz yok");
+        if(user == null)
+            throw new NotFoundException("Herhangi bir kullanıcı bulunamadı.");
+        if(!(user.getUserRole().toString().equals(role)))
+            throw new ForbiddenException("Bu işlemi gerçekleştirmek için yetkiniz yok");
     }
 
     public void validateIsUser(Users user){
@@ -19,7 +22,7 @@ public class RoleService {
         boolean isSecretary = user.getUserRole().toString().equals("Secretary");
         boolean isStudent = user.getUserRole().toString().equals("Student");
         if(!(isTeacher || isSecretary || isStudent))
-            throw new UnauthorizedException("Bu işlemi gerçekleştirmek için yetkiniz yok");
+            throw new ForbiddenException("Bu işlemi gerçekleştirmek için yetkiniz yok");
     }
 }
 

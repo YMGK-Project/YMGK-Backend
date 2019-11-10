@@ -14,13 +14,9 @@ public class TemporaryTokenHolderService {
     private TokenHolderRepository tokenHolderRepository;
 
     public TemporaryTokenHolder findById(String token){
-        return tokenHolderRepository.findById(token).get();
-    }
-
-    public void validateToken(String token){
-        boolean isExist = tokenHolderRepository.findById(token).isPresent();
-        if(!isExist)
-            throw new NotFoundException("Not found any token as : "+token);
+        return tokenHolderRepository.
+                findById(token).
+                orElseThrow(() -> new NotFoundException("Not found any token as : "+token));
     }
 
     public void saveTokenHolder(String token, Users user){

@@ -30,7 +30,6 @@ public class Users {
     private Secretary secretary;
     @OneToOne
     private Student student;
-    private boolean isDeleted = false;
     private Date createdAt;
     private Date updatedAt;
 

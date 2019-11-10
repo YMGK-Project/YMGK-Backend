@@ -3,32 +3,48 @@ package proje.v1.api.service.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import proje.v1.api.common.util.Crypt;
+import proje.v1.api.domian.user.TemporaryTokenHolder;
 import proje.v1.api.domian.user.Users;
 import proje.v1.api.domian.user.UsersRepository;
 import proje.v1.api.exception.BadRequestExcepiton;
 import proje.v1.api.exception.NotFoundException;
+import proje.v1.api.service.email.EmailService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
 
     @Autowired
-    UsersRepository userRepository;
+    private UsersRepository userRepository;
+    @Autowired
+    private TemporaryTokenHolderService temporaryTokenHolderService;
+    @Autowired
+    private EmailService emailService;
 
-    public Optional<Users> findById(String username){
-        return userRepository.findById(username);
+    public void save(Users user) {
+        userRepository.save(user);
     }
-    public Optional<Users> findByEmail(String email){ return userRepository.findByEmail(email); }
 
-    public void validateUser(String username, String password) {
-        Optional<Users> user = userRepository.findById(username);
-        boolean userIsExist = user.isPresent();
-        if(!userIsExist)
-            throw new NotFoundException("User not exist with : "+username);
+    public Users saveAndGet(Users user){
+        return userRepository.save(user);
+    }
+
+    public Users findById(String username){
+        return userRepository.findById(username).
+                orElseThrow(() -> new NotFoundException("User not exist with : "+username));
+    }
+    private Users findByEmail(String email){
+        return userRepository.findByEmail(email).
+                orElseThrow(() -> new NotFoundException("User not exist with email : : "+email));
+    }
+
+    public Users findByUsernameAndPassword(String username, String password) {
         String passWithHashing = Crypt.hashWithSha256(password);
-        if(!(user.get().getPassword().equals(passWithHashing)))
-            throw new BadRequestExcepiton("Password is not correct");
+        return userRepository.findByUsernameAndPassword(username, passWithHashing).
+                orElseThrow(()-> new BadRequestExcepiton("Username or Password incorrect."));
     }
 
     public void validateUserIsNotExist(String username) {
@@ -37,19 +53,28 @@ public class UserService {
             throw new BadRequestExcepiton("Username already taken as : "+username);
     }
 
-    public void validateUserExist(String email){
-        boolean userIsExist = userRepository.findByEmail(email).isPresent();
-        if(!userIsExist)
-            throw new NotFoundException("User not found with email : "+email);
-    }
-
-    public void resetPassword(String username, String newPassword) {
-        Users user = userRepository.findById(username).get();
+    public Users changePasswordAndGetUser(String username, String password, String newPassword) {
+        Users user = findByUsernameAndPassword(username, password);
         user.setPassword(Crypt.hashWithSha256(newPassword));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
-    public void save(Users user) {
-        userRepository.save(user);
+    public void forgotPassword(String email, String scheme, String serverName) {
+        Users user = findByEmail(email);
+        String token = UUID.randomUUID().toString();
+        temporaryTokenHolderService.saveTokenHolder(token, user);
+        emailService.sendPasswordChangeMail(
+                email,
+                scheme+"://"+serverName,
+                token
+        );
+    }
+
+    public Users resetPasswordAndGetUser(String token, String newPassword) {
+        TemporaryTokenHolder tokenHolder = temporaryTokenHolderService.findById(token);
+        return changePasswordAndGetUser(
+                tokenHolder.getUsers().getUsername(),
+                tokenHolder.getUsers().getPassword(),
+                newPassword);
     }
 }

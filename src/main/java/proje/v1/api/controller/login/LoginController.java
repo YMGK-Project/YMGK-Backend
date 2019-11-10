@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import proje.v1.api.config.auth.JwtProvider;
 import proje.v1.api.common.messages.Response;
 import proje.v1.api.common.util.BindingValidator;
+import proje.v1.api.converter.user.UserConverter;
+import proje.v1.api.domian.user.Users;
+import proje.v1.api.dto.login.LoginDTO;
+import proje.v1.api.dto.user.UserDTO;
 import proje.v1.api.message.login.RequestLogin;
-import proje.v1.api.service.secretary.SecretaryService;
 import proje.v1.api.service.user.UserService;
 import javax.validation.Valid;
 
@@ -18,18 +21,18 @@ public class LoginController {
     @Autowired
     private JwtProvider jwtProvider;
     @Autowired
-    private SecretaryService secretaryService;
-    @Autowired
     private UserService userService;
+    @Autowired
+    private UserConverter userConverter;
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
-    public Response<String> login(@Valid @RequestBody RequestLogin requestLogin, BindingResult bindingResult){
+    public Response<LoginDTO> login(@Valid @RequestBody RequestLogin requestLogin, BindingResult bindingResult){
         BindingValidator.validate(bindingResult);
-        userService.validateUser(requestLogin.getUsername(), requestLogin.getPassword());
-        return new Response<>(200, true, jwtProvider.generateJsonWebToken(requestLogin.getUsername()));
+        Users user = userService.findByUsernameAndPassword(requestLogin.getUsername(), requestLogin.getPassword());
+        UserDTO userDTO = userConverter.convert(user);
+        String jwt = jwtProvider.generateJsonWebToken(requestLogin.getUsername());
+        LoginDTO loginDTO = new LoginDTO(userDTO, jwt);
+        return new Response<>(200, true, loginDTO);
     }
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public void qwe(){
-        secretaryService.testSecretary();
-    }
+
 }

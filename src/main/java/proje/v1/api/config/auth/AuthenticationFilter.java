@@ -27,8 +27,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         String jwt = jwtProvider.getJwtFromHeader(httpServletRequest.getHeader(SecurityConstants.HEADER_STRING));
         if(jwt != null && jwtProvider.isJsonWebToken(jwt) && !jwtProvider.isExpirationPassed(jwt)){
             String username = jwtProvider.getUsernameFrom(jwt);
-            Optional<Users> user = userService.findById(username);
-            user.ifPresent(users -> ContextHolder.user = users);
+            Users user = userService.findById(username);
+            ContextHolder.user = user;
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }

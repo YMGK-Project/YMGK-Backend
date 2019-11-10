@@ -5,10 +5,7 @@ import lombok.Setter;
 import proje.v1.api.common.domain.BaseModel;
 import proje.v1.api.domian.classroom.Classroom;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -17,6 +14,6 @@ import java.util.List;
 public class Student extends BaseModel {
 
     private String fingerMark;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Classroom> classrooms;
 }

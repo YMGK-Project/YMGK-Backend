@@ -11,7 +11,4 @@ public class Crypt {
         return Hashing.sha256().hashString(originalString, StandardCharsets.UTF_8).toString();
     }
 
-    public static String getRandomUUID(){
-        return UUID.randomUUID().toString();
-    }
 }

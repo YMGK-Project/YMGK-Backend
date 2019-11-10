@@ -34,7 +34,8 @@ public class SecretaryService {
         userService.save(user);
     }
 
-    public Users saveTeacher(String email, String username, String password, String name, String surname) {
+    public Users saveTeacherAndGet(String email, String username, String password, String name, String surname) {
+        userService.validateUserIsNotExist(username);
         Teacher teacher = new Teacher();
         Teacher teacher1 = teacherService.save(teacher);
         String passwordWithHash = Crypt.hashWithSha256(password);
@@ -42,11 +43,11 @@ public class SecretaryService {
         user.setTeacher(teacher1);
         user.setUserRole(UserRole.Teacher);
         user.setEmail(email);
-        userService.save(user);
-        return user;
+        return userService.saveAndGet(user);
     }
 
-    public Users saveStudent(String email, String username, String password, String fingerMark, String name, String surname) {
+    public Users saveStudentAndGet(String email, String username, String password, String fingerMark, String name, String surname) {
+        userService.validateUserIsNotExist(username);
         Student student = new Student();
         String fingerMarkWithHash = Crypt.hashWithSha256(fingerMark);
         student.setFingerMark(fingerMarkWithHash);
@@ -56,7 +57,6 @@ public class SecretaryService {
         user.setStudent(student1);
         user.setUserRole(UserRole.Student);
         user.setEmail(email);
-        userService.save(user);
-        return user;
+        return userService.saveAndGet(user);
     }
 }
