@@ -67,4 +67,17 @@ public class UserController {
         TemporaryTokenHolder tokenHolder = temporaryTokenHolderService.findById(token);
         return "www.hasanatasoy.com/index/{token}";
     }
+    
+    @RequestMapping(value="/rest/password/{token}/update",method=RequestMethod.POST)
+    public Response<String> resetPasswordSuccess(@PathVariable("token") String token,@Valid @RequestBody RequestPasswordChange requestPasswordChange,BindingResult bindingResult) {
+	BindingValidator.validate(bindingResult);
+	temporaryTokenHolderService.validateToken(token);
+	boolean status=checkPasswordChange(requestPasswordChange.getOldPassword(),requestPasswordChange.getNewPassword());
+	if (status) {
+		Users users=temporaryTokenHolderService.findById(token).getUsers();
+		users.setPassword(Crypt.hashWithSha256(requestPasswordChange.getOldPassword()))
+		return new Response<> (200,true,"şifre değiştirildi");
+	}
+	 return new Response<>(400,false,"hata oluştu");
+  }
 }
