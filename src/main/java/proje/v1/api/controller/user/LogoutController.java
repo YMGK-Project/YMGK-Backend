@@ -36,7 +36,6 @@ public class LogoutController {
         String aut=request.getHeader("Authorization");
         if (aut != null) {
             String token=aut.replace("Bearer","").trim();
-            //OAuth2AccessToken
             OAuth2AccessToken oAuth2AccessToken=tokenStore.readAccessToken(token);
             tokenStore.removeAccessToken(oAuth2AccessToken);
 
