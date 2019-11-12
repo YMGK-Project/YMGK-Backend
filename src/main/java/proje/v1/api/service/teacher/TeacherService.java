@@ -3,6 +3,7 @@ package proje.v1.api.service.teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import proje.v1.api.domian.classroom.Classroom;
+import proje.v1.api.domian.classroom.ClassroomRepository;
 import proje.v1.api.domian.classroom.EducationType;
 import proje.v1.api.domian.classroom.SectionType;
 import proje.v1.api.domian.rollcall.RollCall;
@@ -66,16 +67,24 @@ public class TeacherService {
         rollCallService.cancelRollCall(deviceId);
     }
 
-    public Classroom findClassroomBy(Long id) {
-        return null; // yapılacak
-    }
-
     public void deleteClassroom(Long id) {
-        // yapılacak
+       //classroomService.deleteClassroomById(id);
     }
 
     public Classroom updateClassroomAndGet(Long id, String cod, String name, SectionType sectionType, EducationType educationType) {
-        return null; // yapılacak
+        Classroom classroom=classroomService.findById(id);
+        classroom.setCod(cod);
+        classroom.setName(name);
+        classroom.setSectionType(sectionType);
+        classroom.setEducationType(educationType);
+        return classroomService.saveAndGet(classroom);
+    }
+    public void deleteTeacherById(Long id) {
+        teacherRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found any teacher with id: "+id));
+        teacherRepository.deleteById(id);
+    }
+    public Teacher findById(Long id) {
+        return teacherRepository.findById(id).get();
     }
 
     public RollCall getActiveRollCall(Long deviceId) {

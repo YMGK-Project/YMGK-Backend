@@ -41,4 +41,13 @@ public class ClassroomService {
         return classroomRepository.findById(classroomId).
                 orElseThrow(() -> new NotFoundException("Not found any classroom with id : "+ classroomId));
     }
+
+    public Classroom findById(Long id) {
+        return classroomRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Not found any classroom with id: "+id));
+    }
+
+    public Classroom saveAndGet(Classroom classroom) {
+        return classroomRepository.save(classroom);
+    }
 }

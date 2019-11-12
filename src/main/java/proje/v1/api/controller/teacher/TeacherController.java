@@ -18,6 +18,7 @@ import proje.v1.api.dto.rollcall.RollCallDTO;
 import proje.v1.api.message.classroom.RequestClassroom;
 import proje.v1.api.message.teacher.RequestFinishRollCall;
 import proje.v1.api.message.teacher.RequestStartRollCall;
+import proje.v1.api.service.classroom.ClassroomService;
 import proje.v1.api.service.user.RoleService;
 import proje.v1.api.service.teacher.TeacherService;
 
@@ -33,6 +34,8 @@ public class TeacherController {
     private TeacherService teacherService;
     @Autowired
     private RollCallConverter rollCallConverter;
+    @Autowired
+    private ClassroomService classroomService;
     @Autowired
     private ClassroomConverter classroomConverter;
     @Autowired
@@ -51,7 +54,7 @@ public class TeacherController {
     @RequestMapping(value = "/classrooms/{id}", method = RequestMethod.GET)
     public Response<ClassroomDTO> getClassroom(@PathVariable Long id){
         roleService.validatePermission(ContextHolder.user, TEACHER);
-        Classroom classroom = teacherService.findClassroomBy(id);
+        Classroom classroom = classroomService.findById(id);
         ClassroomDTO classroomDTO = classroomConverter.convert(classroom);
         return new Response<>(200,true, classroomDTO);
     }

@@ -1,5 +1,6 @@
 package proje.v1.api.controller;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import proje.v1.api.domian.classroom.Classroom;
@@ -13,6 +14,7 @@ import proje.v1.api.service.teacher.TeacherService;
 import proje.v1.api.service.user.UserService;
 import java.util.List;
 
+@Api(description = "Test İşlemleri")
 @RestController
 @RequestMapping(value = "/test")
 public class TestController {
