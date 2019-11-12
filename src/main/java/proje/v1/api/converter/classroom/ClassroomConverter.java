@@ -18,7 +18,8 @@ public class ClassroomConverter implements Converter<Classroom, ClassroomDTO> {
                 classroom.getCod(),
                 classroom.getName(),
                 classroom.getSectionType(),
-                classroom.getEducationType()
+                classroom.getEducationType(),
+                classroom.getStudents().size()
         );
     }
 

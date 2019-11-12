@@ -77,4 +77,8 @@ public class TeacherService {
     public Classroom updateClassroomAndGet(Long id, String cod, String name, SectionType sectionType, EducationType educationType) {
         return null; // yapılacak
     }
+
+    public RollCall getActiveRollCall(Long deviceId) {
+        return null;
+    }
 }

@@ -70,7 +70,7 @@ public class ApiApplication extends SpringBootServletInitializer {
 	private void initClassroomAndStudentAndRollCall(ClassroomService classroomService, StudentService studentService, RollCallService rollCallService) {
 		List<Classroom> classrooms = Arrays.asList(
 				new Classroom(null, null, "101", "Birinci Ders", SectionType.A, EducationType.First),
-				new Classroom(null, null, "102", "İkinci Ders", SectionType.A, EducationType.Secondary),
+				new Classroom(null, null, "102", "İkinci Ders", SectionType.A, EducationType.Second),
 				new Classroom(null, null, "103", "Üçüncü Ders", SectionType.B, EducationType.First)
 		);
 		List<Student> students = Arrays.asList(

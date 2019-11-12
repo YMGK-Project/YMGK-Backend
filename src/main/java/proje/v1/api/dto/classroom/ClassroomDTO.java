@@ -21,4 +21,5 @@ public class ClassroomDTO {
     private String name;
     private SectionType sectionType;
     private EducationType educationType;
+    private int studentCount;
 }

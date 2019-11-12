@@ -116,6 +116,15 @@ public class TeacherController {
         return new Response<>(201, true, rollCallDTO);
     }
 
+    @ApiOperation(value = "Öğretmenin aktif yoklama listesini almasını sağlar")
+    @RequestMapping(value = "/classrooms/now/rollcall/{deviceId}", method = RequestMethod.GET)
+    public Response<RollCallDTO> getActiveRollCall(@PathVariable Long deviceId){
+        roleService.validatePermission(ContextHolder.user, TEACHER);
+        RollCall rollCall = teacherService.getActiveRollCall(deviceId);
+        RollCallDTO rollCallDTO = rollCallConverter.convert(rollCall);
+        return new Response<>(200, true, rollCallDTO);
+    }
+
     @ApiOperation(value = "Öğretmenin yoklamayı iptal etmesini sağlar")
     @RequestMapping(value = "/classrooms/cancel/rollcall", method = RequestMethod.POST)
     public Response<String> cancelRollCall(@RequestBody RequestStartRollCall requestStartRollCall /* şimdilik bu kullanılsın */){

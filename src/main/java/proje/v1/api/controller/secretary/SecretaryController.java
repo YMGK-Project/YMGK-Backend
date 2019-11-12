@@ -43,24 +43,6 @@ public class SecretaryController {
     private StudentConverter studentConverter;
     private String SECRETARY = "Secretary";
 
-    @ApiOperation(value = "Bölümüne göre bütün öğretmenleri getirir")
-    @RequestMapping(value = "/teachers/{department}", method = RequestMethod.GET)
-    public Response<List<TeacherDTO>> getTeachersBy(@PathVariable String department){
-        roleService.validatePermission(ContextHolder.user, SECRETARY);
-        List<Teacher> teachers = secretaryService.findTeachersBy(department);
-        List<TeacherDTO> teacherDTOS = teacherConverter.convert(teachers);
-        return new Response<>(200, true, teacherDTOS);
-    }
-
-    @ApiOperation(value = "Bölümüne göre bütün öğrencileri getirir")
-    @RequestMapping(value = "/students/{department}", method = RequestMethod.GET)
-    public Response<List<StudentDTO>> getStudentsBy(@PathVariable String department){
-        roleService.validatePermission(ContextHolder.user, SECRETARY);
-        List<Student> students = secretaryService.findStudentsBy(department);
-        List<StudentDTO> studentDTOS = studentConverter.convert(students);
-        return new Response<>(200, true, studentDTOS);
-    }
-
     @ApiOperation(value = "Id'ye göre öğretmeni siler")
     @RequestMapping(value = "/teachers/{id}", method = RequestMethod.DELETE)
     public Response<String> deleteTeacher(@PathVariable Long id){

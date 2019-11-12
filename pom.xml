@@ -93,7 +93,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-<<<<<<< HEAD
 		<!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
 		<dependency>
 			<groupId>redis.clients</groupId>
@@ -105,15 +104,6 @@
 			<artifactId>spring-data-redis</artifactId>
 			<version>2.2.0.RELEASE</version>
 		</dependency>
-=======
-		    <!-- https://mvnrepository.com/artifact/org.springframework.security.oauth/spring-security-oauth2 -->
-       		 <dependency>
-          		  <groupId>org.springframework.security.oauth</groupId>
-          		  <artifactId>spring-security-oauth2</artifactId>
-         		  <version>2.3.5.RELEASE</version>
-     	   </dependency>
-		
->>>>>>> 2308ba43aa9ef480bdd50cc22c9125330fc6b9d2
 	</dependencies>
 	<build>
 		<plugins>

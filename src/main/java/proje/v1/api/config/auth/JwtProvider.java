@@ -10,7 +10,7 @@ import java.util.Date;
 @Component
 public class JwtProvider {
 
-    private String secretKey = "merhabadünya";
+    private String secretKey = "merhabadünya123";
     private int expiration = 600000;
 
     String getJwtFromHeader(String authHeader){
@@ -24,17 +24,17 @@ public class JwtProvider {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime()+expiration))
-                .signWith(SignatureAlgorithm.ES256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
     }
 
     String getUsernameFrom(String token){
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token).getBody().getSubject();
     }
 
     boolean isJsonWebToken(String token){
         try {
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token);
             return true;
         }catch (Exception e){
             return false;
@@ -42,7 +42,7 @@ public class JwtProvider {
     }
 
     boolean isExpirationPassed(String token){
-        Date expiration = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getExpiration();
+        Date expiration = Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token).getBody().getExpiration();
         return expiration.getTime() < new Date().getTime();
     }
 

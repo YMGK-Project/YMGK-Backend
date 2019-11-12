@@ -57,11 +57,4 @@ public class SecretaryService {
         return secretaryRepository.save(secretary);
     }
 
-    public List<Teacher> findTeachersBy(String department) {
-        return null; // yapılacak
-    }
-
-    public List<Student> findStudentsBy(String department) {
-        return null; // yapılacak
-    }
 }
