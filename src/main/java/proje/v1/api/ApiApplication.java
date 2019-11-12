@@ -89,7 +89,7 @@ public class ApiApplication extends SpringBootServletInitializer {
 		rollCalls.forEach(rollCallService::save);
 		List<RollCall> savedRollCalls = rollCallService.findAll();
 		List<Classroom> savedClassrooms = classroomService.findAll();
-		savedClassrooms.forEach(classroom -> classroom.setStudents(savedStudents););
+		savedClassrooms.forEach(classroom -> classroom.setStudents(savedStudents));
 		savedClassrooms.get(0).setRollCalls(savedRollCalls);
 		savedClassrooms.forEach(classroomService::save);
 		List<Classroom> dSavedClassroom = classroomService.findAll();
