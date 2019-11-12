@@ -10,8 +10,7 @@ import java.util.Date;
 @Component
 public class JwtProvider {
 
-    @Value("$(secret-key)")
-    private String secretKey;
+    private String secretKey = "merhabadünya";
     private int expiration = 600000;
 
     String getJwtFromHeader(String authHeader){
@@ -25,7 +24,7 @@ public class JwtProvider {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime()+expiration))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.ES256, secretKey)
                 .compact();
     }
 

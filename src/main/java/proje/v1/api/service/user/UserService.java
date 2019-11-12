@@ -8,6 +8,7 @@ import proje.v1.api.domian.user.Users;
 import proje.v1.api.domian.user.UsersRepository;
 import proje.v1.api.exception.BadRequestExcepiton;
 import proje.v1.api.exception.NotFoundException;
+import proje.v1.api.exception.UnAuthenticationException;
 import proje.v1.api.service.email.EmailService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +45,7 @@ public class UserService {
     public Users findByUsernameAndPassword(String username, String password) {
         String passWithHashing = Crypt.hashWithSha256(password);
         return userRepository.findByUsernameAndPassword(username, passWithHashing).
-                orElseThrow(()-> new BadRequestExcepiton("Username or Password incorrect."));
+                orElseThrow(()-> new UnAuthenticationException("Username or Password incorrect."));
     }
 
     public void validateUserIsNotExist(String username) {

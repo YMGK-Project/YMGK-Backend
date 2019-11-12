@@ -15,7 +15,6 @@ public class BaseModel {
     private Long id;
     private Date createdAt;
     private Date updatedAt;
-    private boolean isDeleted = false;
 
     @PrePersist
     public void onCreate(){

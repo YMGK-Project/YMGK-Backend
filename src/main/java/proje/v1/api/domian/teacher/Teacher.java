@@ -1,5 +1,6 @@
 package proje.v1.api.domian.teacher;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import proje.v1.api.domian.classroom.Classroom;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Teacher extends BaseModel {
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Classroom> classroomList = new ArrayList<>();
+    @OneToMany
+    @JoinTable(name = "teacher_classrooms")
+    @JsonIgnore
+    private List<Classroom> classrooms = new ArrayList<>();
 }

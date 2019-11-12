@@ -1,5 +1,7 @@
 package proje.v1.api.controller.login;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import proje.v1.api.message.login.RequestLogin;
 import proje.v1.api.service.user.UserService;
 import javax.validation.Valid;
 
+@Api(description = "Giriş İşlemleri")
 @RestController
 @RequestMapping(value = "/login")
 public class LoginController {
@@ -25,6 +28,7 @@ public class LoginController {
     @Autowired
     private UserConverter userConverter;
 
+    @ApiOperation(value = "Kullanıcının giriş yapmasını sağlar")
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     public Response<LoginDTO> login(@Valid @RequestBody RequestLogin requestLogin, BindingResult bindingResult){
         BindingValidator.validate(bindingResult);

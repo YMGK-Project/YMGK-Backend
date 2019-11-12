@@ -28,15 +28,15 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<Response<String>> unAuthorizedException(Exception exception){
-        Response<String> response = new Response<>(401, false, exception.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-    }
-
     @ExceptionHandler(UnhandledException.class)
     public ResponseEntity<Response<String>> unhandledException(Exception exception){
         Response<String> response = new Response<>(500, false, exception.getMessage());
         return new ResponseEntity<>(response, HttpStatus.valueOf(500));
+    }
+
+    @ExceptionHandler(UnAuthenticationException.class)
+    public ResponseEntity<Response<String>> unAuthenticationException(Exception exception){
+        Response<String> response = new Response<>(401, false, exception.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 }

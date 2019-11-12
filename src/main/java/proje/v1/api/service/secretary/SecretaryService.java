@@ -13,6 +13,8 @@ import proje.v1.api.service.student.StudentService;
 import proje.v1.api.service.teacher.TeacherService;
 import proje.v1.api.service.user.UserService;
 
+import java.util.List;
+
 @Service
 public class SecretaryService {
 
@@ -24,15 +26,6 @@ public class SecretaryService {
     private StudentService studentService;
     @Autowired
     private SecretaryRepository secretaryRepository;
-
-    public void testSecretary(){
-        Secretary secretary = new Secretary();
-        Secretary secretary1 = secretaryRepository.save(secretary);
-        Users user = new Users("hasanatasoy", Crypt.hashWithSha256("12345678"), "hasan", "atasoy");
-        user.setUserRole(UserRole.Secretary);
-        user.setSecretary(secretary1);
-        userService.save(user);
-    }
 
     public Users saveTeacherAndGet(String email, String username, String password, String name, String surname) {
         userService.validateUserIsNotExist(username);
@@ -58,5 +51,17 @@ public class SecretaryService {
         user.setUserRole(UserRole.Student);
         user.setEmail(email);
         return userService.saveAndGet(user);
+    }
+
+    public Secretary save(Secretary secretary) {
+        return secretaryRepository.save(secretary);
+    }
+
+    public List<Teacher> findTeachersBy(String department) {
+        return null; // yapılacak
+    }
+
+    public List<Student> findStudentsBy(String department) {
+        return null; // yapılacak
     }
 }

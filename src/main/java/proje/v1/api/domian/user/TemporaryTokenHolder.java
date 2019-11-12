@@ -13,7 +13,7 @@ import javax.persistence.OneToOne;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "tokenholder")
 public class TemporaryTokenHolder {
 
     @Id
