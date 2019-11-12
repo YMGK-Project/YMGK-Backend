@@ -3,6 +3,7 @@ package proje.v1.api.service.teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import proje.v1.api.domian.classroom.Classroom;
+import proje.v1.api.domian.classroom.ClassroomRepository;
 import proje.v1.api.domian.classroom.EducationType;
 import proje.v1.api.domian.classroom.SectionType;
 import proje.v1.api.domian.rollcall.RollCall;
@@ -28,6 +29,8 @@ public class TeacherService {
     private RollCallService rollCallService;
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private ClassroomRepository classroomRepository;
 
     public Teacher save(Teacher teacher) {
         return teacherRepository.save(teacher);
@@ -67,14 +70,40 @@ public class TeacherService {
     }
 
     public Classroom findClassroomBy(Long id) {
-        return null; // yapılacak
-    }
-
-    public void deleteClassroom(Long id) {
+        Classroom classroom=classroomRepository.findById(id);
+        return classroom;
         // yapılacak
     }
 
-    public Classroom updateClassroomAndGet(Long id, String cod, String name, SectionType sectionType, EducationType educationType) {
-        return null; // yapılacak
+    public void deleteClassroom(Long id) {
+
+        classroomService.deleteClassroomById(id);
     }
+
+    public Classroom updateClassroomAndGet(Long id, String cod, String name, SectionType sectionType, EducationType educationType) {
+        boolean status =classroomRepository.findById(id).isPresent();
+        if (!status) {
+            throw new NotFoundException("sinif bulunamadi");
+        }
+        Classroom classroom=classroomRepository.findById(id);
+        classroom.setCod(cod);
+        classroom.setName(name);
+        classroom.setSectionType(sectionType);
+        classroom.setEducationType(educationType);
+        classroomRepository.save(classroom);
+
+        return classroom; // yapılacak
+    }
+    public void deleteTeacherById(Long id) {
+        boolean status=teacherRepository.findById(id).isPresent();
+        if(!status) {
+            throw new NotFoundException("silinecek kayit bulunamadi");
+        }
+        teacherRepository.deleteById(id);
+    }
+    public Teacher findById(Long id) {
+        return teacherRepository.findById(id);
+    }
+
+
 }
