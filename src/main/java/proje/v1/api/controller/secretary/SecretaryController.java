@@ -19,6 +19,8 @@ import proje.v1.api.dto.teacher.TeacherDTO;
 import proje.v1.api.dto.user.UserDTO;
 import proje.v1.api.message.student.RequestStudent;
 import proje.v1.api.message.teacher.RequestTeacher;
+import proje.v1.api.service.student.StudentService;
+import proje.v1.api.service.teacher.TeacherService;
 import proje.v1.api.service.user.RoleService;
 import proje.v1.api.service.secretary.SecretaryService;
 import proje.v1.api.service.user.UserService;
@@ -41,6 +43,10 @@ public class SecretaryController {
     private TeacherConverter teacherConverter;
     @Autowired
     private StudentConverter studentConverter;
+    @Autowired
+    private TeacherService teacherService;
+    @Autowired
+    private StudentService studentService;
     private String SECRETARY = "Secretary";
 
     @ApiOperation(value = "Bölümüne göre bütün öğretmenleri getirir")
@@ -64,25 +70,36 @@ public class SecretaryController {
     @ApiOperation(value = "Id'ye göre öğretmeni siler")
     @RequestMapping(value = "/teachers/{id}", method = RequestMethod.DELETE)
     public Response<String> deleteTeacher(@PathVariable Long id){
-        return null;
+        roleService.validatePermission(ContextHolder.user,SECRETARY);
+        teacherService.deleteTeacherById(id);
+        return new Response<>(200,true,"kayit silindi");
     }
 
     @ApiOperation(value = "Id'ye göre öğrenciyi siler")
     @RequestMapping(value = "/students/{id}", method = RequestMethod.DELETE)
     public Response<String> deleteStudent(@PathVariable Long id){
-        return null;
+        roleService.validatePermission(ContextHolder.user,SECRETARY);
+        studentService.deleteStudentById(id);
+        return new Response<>(200,true,"kayit silindi");
     }
 
     @ApiOperation(value = "Id'ye göre öğretmeni getirir")
     @RequestMapping(value = "/teachers/{id}", method = RequestMethod.GET)
     public Response<TeacherDTO> getTeacher(@PathVariable Long id){
-        return null;
+        roleService.validatePermission(ContextHolder.user,SECRETARY);
+        Teacher teacher=teacherService.findById(id);
+        TeacherDTO teacherDTO=teacherConverter.convert(teacher);
+
+        return new Response<>(200,true,teacherDTO);
     }
 
     @ApiOperation(value = "Id'ye göre öğrenciyi getirir")
     @RequestMapping(value = "/students/{id}", method = RequestMethod.GET)
     public Response<StudentDTO> getStudent(@PathVariable Long id){
-        return null;
+        roleService.validatePermission(ContextHolder.user,SECRETARY);
+        Student student=studentService.findById(id);
+        StudentDTO studentDTO=studentConverter.convert(student);
+        return new Response<>(200,true,studentDTO);
     }
 
     @ApiOperation(value = "Sekreterin öğretmen eklemesini sağlar")
