@@ -12,6 +12,7 @@ import proje.v1.api.domian.student.Student;
 import proje.v1.api.domian.teacher.TeacherRepository;
 import proje.v1.api.domian.user.UserRole;
 import proje.v1.api.domian.user.Users;
+import proje.v1.api.exception.NotFoundException;
 import proje.v1.api.service.classroom.ClassroomService;
 import proje.v1.api.service.student.StudentService;
 import proje.v1.api.service.teacher.TeacherService;
@@ -76,13 +77,12 @@ public class SecretaryService {
         return null; // yapılacak
     }
 
-    public boolean deleteTeacher(Long id) {
+    public void deleteTeacher(Long id) {
         boolean status=teacherRepository.findById(id).isPresent();
-        if(status) {
-            teacherRepository.deleteById(id);
-            return true;
+        if(!status) {
+            throw new NotFoundException("silinecek kayit bulunamadi");
         }
-        return false;
+        teacherRepository.deleteById(id);
     }
 
 
