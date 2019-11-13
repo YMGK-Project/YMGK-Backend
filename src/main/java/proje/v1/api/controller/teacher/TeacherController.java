@@ -10,14 +10,12 @@ import proje.v1.api.common.messages.Response;
 import proje.v1.api.common.util.BindingValidator;
 import proje.v1.api.converter.classroom.ClassroomConverter;
 import proje.v1.api.converter.rollcall.RollCallConverter;
-import proje.v1.api.converter.student.StudentConverter;
 import proje.v1.api.domian.classroom.Classroom;
 import proje.v1.api.domian.rollcall.RollCall;
 import proje.v1.api.dto.classroom.ClassroomDTO;
 import proje.v1.api.dto.rollcall.RollCallDTO;
 import proje.v1.api.message.classroom.RequestClassroom;
 import proje.v1.api.message.teacher.RequestFinishRollCall;
-import proje.v1.api.message.teacher.RequestStartRollCall;
 import proje.v1.api.service.classroom.ClassroomService;
 import proje.v1.api.service.user.RoleService;
 import proje.v1.api.service.teacher.TeacherService;
@@ -101,11 +99,10 @@ public class TeacherController {
     }
 
     @ApiOperation(value = "Öğretmenin yoklama başlatmasını sağlar")
-    @RequestMapping(value = "/classrooms/start/rollcall", method = RequestMethod.POST)
-    public Response<String> startRollCall(@Valid @RequestBody RequestStartRollCall requestStartRollCall, BindingResult bindingResult){
-        BindingValidator.validate(bindingResult);
+    @RequestMapping(value = "/classrooms/start/rollcall/{id}", method = RequestMethod.POST)
+    public Response<String> startRollCall(@PathVariable Long deviceId){
         roleService.validatePermission(ContextHolder.user, TEACHER);
-        teacherService.startRollCall(requestStartRollCall.getDeviceId());
+        teacherService.startRollCall(deviceId);
         return new Response<>(200, true, "Yoklama başlatıldı.");
     }
 
@@ -129,10 +126,10 @@ public class TeacherController {
     }
 
     @ApiOperation(value = "Öğretmenin yoklamayı iptal etmesini sağlar")
-    @RequestMapping(value = "/classrooms/cancel/rollcall", method = RequestMethod.POST)
-    public Response<String> cancelRollCall(@RequestBody RequestStartRollCall requestStartRollCall /* şimdilik bu kullanılsın */){
+    @RequestMapping(value = "/classrooms/cancel/rollcall/{id}", method = RequestMethod.GET)
+    public Response<String> cancelRollCall(@PathVariable Long deviceId){
         roleService.validatePermission(ContextHolder.user, TEACHER);
-        teacherService.cancelRollCall(requestStartRollCall.getDeviceId());
+        teacherService.cancelRollCall(deviceId);
         return new Response<>(200, true, "Yoklama iptal edildi.");
     }
 }
