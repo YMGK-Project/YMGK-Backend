@@ -99,7 +99,7 @@ public class TeacherController {
     }
 
     @ApiOperation(value = "Öğretmenin yoklama başlatmasını sağlar")
-    @RequestMapping(value = "/classrooms/start/rollcall/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/classrooms/start/rollcall/{deviceId}", method = RequestMethod.POST)
     public Response<String> startRollCall(@PathVariable Long deviceId){
         roleService.validatePermission(ContextHolder.user, TEACHER);
         teacherService.startRollCall(deviceId);
@@ -126,7 +126,7 @@ public class TeacherController {
     }
 
     @ApiOperation(value = "Öğretmenin yoklamayı iptal etmesini sağlar")
-    @RequestMapping(value = "/classrooms/cancel/rollcall/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/classrooms/cancel/rollcall/{deviceId}", method = RequestMethod.GET)
     public Response<String> cancelRollCall(@PathVariable Long deviceId){
         roleService.validatePermission(ContextHolder.user, TEACHER);
         teacherService.cancelRollCall(deviceId);
