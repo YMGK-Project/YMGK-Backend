@@ -17,7 +17,8 @@ public class UserConverter implements Converter<Users, UserDTO> {
                 user.getName(),
                 user.getSurname(),
                 user.getUserRole(),
-                dtoUser
+                dtoUser,
+                user.getImgURL()
         );
     }
 

@@ -32,6 +32,7 @@ public class Users {
     private Student student;
     private Date createdAt;
     private Date updatedAt;
+    private String imgURL;
 
     public Users(String username, String password, String name, String surname){
         this.username = username;

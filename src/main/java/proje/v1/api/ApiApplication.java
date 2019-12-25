@@ -52,9 +52,18 @@ public class ApiApplication extends SpringBootServletInitializer {
 		Teacher teacher1 = teacherService.save(teacher);
 		Users user = new Users("teacher",Crypt.hashWithSha256("teacher"),"fatih", "özkaynak");
 		user.setEmail("fatihözkaynak@gmail.com");
+		user.setImgURL("http://www.kriptarium.com/uploads/4/1/0/0/41002523/published/screenshot-2017-07-29-15-41-46.png?1501335230");
 		user.setUserRole(UserRole.Teacher);
 		user.setTeacher(teacher1);
 		userService.save(user);
+		Teacher teacher2 = new Teacher();
+		Teacher teacher3 = teacherService.save(teacher2);
+		Users user1 = new Users("teacher2",Crypt.hashWithSha256("teacher2"),"Erkan", "Tanyıldızlı");
+		user1.setEmail("erkantanyildizli@gmail.com");
+		user1.setImgURL("https://abs.firat.edu.tr/upload/user_435/6b5053c331386534b8220c043375f391b5c2ffc1_image_435.jpg");
+		user1.setUserRole(UserRole.Teacher);
+		user1.setTeacher(teacher3);
+		userService.save(user1);
 	}
 
 	private void initSecretary(SecretaryService secretaryService, UserService userService) {
