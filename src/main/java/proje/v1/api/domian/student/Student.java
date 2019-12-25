@@ -25,10 +25,7 @@ import java.util.List;
 public class Student extends BaseModel{
 
     private String fingerMark;
-    @ManyToMany
+    @ManyToMany(mappedBy = "students")
     @JsonIgnore
-    @JoinTable(
-            name = "student_classroom"
-    )
     private List<Classroom> classrooms = new ArrayList<>();
 }

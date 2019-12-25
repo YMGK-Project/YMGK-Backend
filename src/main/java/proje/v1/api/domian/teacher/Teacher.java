@@ -23,6 +23,5 @@ public class Teacher extends BaseModel {
 
     @OneToMany
     @JoinTable(name = "teacher_classrooms")
-    @JsonIgnore
     private List<Classroom> classrooms = new ArrayList<>();
 }

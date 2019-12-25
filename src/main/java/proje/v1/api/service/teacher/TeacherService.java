@@ -14,8 +14,10 @@ import proje.v1.api.exception.NotFoundException;
 import proje.v1.api.service.classroom.ClassroomService;
 import proje.v1.api.service.rollcall.RollCallService;
 import proje.v1.api.service.student.StudentService;
+import proje.v1.api.service.user.UserService;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,6 +31,8 @@ public class TeacherService {
     private RollCallService rollCallService;
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private UserService userService;
 
     public Teacher save(Teacher teacher) {
         return teacherRepository.save(teacher);
@@ -45,11 +49,16 @@ public class TeacherService {
     public List<Classroom> findAllClassroomBy(Long id) {
         Teacher teacher = teacherRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("Not found any teacher with id: "+id));
+        System.out.println(teacher.getId());
         return teacher.getClassrooms();
     }
 
-    public void startRollCall(Long deviceId) {
+    public List<Users> startRollCall(Long deviceId, Long classroomId) {
         rollCallService.startRollCall(deviceId);
+        Classroom classroom = classroomService.findById(classroomId);
+        List<Users> users = new ArrayList<>();
+        classroom.getStudents().forEach(student -> users.add(userService.findByStudent(student.getId())));
+        return users;
     }
 
     public RollCall finishRollCall(Long classroomId, Long deviceId) {

@@ -9,7 +9,6 @@ import proje.v1.api.common.util.Crypt;
 import proje.v1.api.domian.classroom.Classroom;
 import proje.v1.api.domian.classroom.EducationType;
 import proje.v1.api.domian.classroom.SectionType;
-import proje.v1.api.domian.rollcall.RollCall;
 import proje.v1.api.domian.secretary.Secretary;
 import proje.v1.api.domian.student.Student;
 import proje.v1.api.domian.teacher.Teacher;
@@ -24,6 +23,7 @@ import proje.v1.api.service.user.UserService;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @SpringBootApplication
 public class ApiApplication extends SpringBootServletInitializer {
@@ -41,21 +41,13 @@ public class ApiApplication extends SpringBootServletInitializer {
 			ClassroomService classroomService,
 			RollCallService rollCallService){
 		return args -> {
-				initClassroomAndStudentAndRollCall(classroomService, studentService, rollCallService);
+				initClassroomAndStudentAndRollCall(classroomService, studentService, userService, teacherService);
 				initTeacher(teacherService, userService);
 				initSecretary(secretaryService, userService);
 		};
 	}
 
 	private void initTeacher(TeacherService teacherService, UserService userService) {
-		Teacher teacher = new Teacher();
-		Teacher teacher1 = teacherService.save(teacher);
-		Users user = new Users("teacher",Crypt.hashWithSha256("teacher"),"fatih", "özkaynak");
-		user.setEmail("fatihözkaynak@gmail.com");
-		user.setImgURL("http://www.kriptarium.com/uploads/4/1/0/0/41002523/published/screenshot-2017-07-29-15-41-46.png?1501335230");
-		user.setUserRole(UserRole.Teacher);
-		user.setTeacher(teacher1);
-		userService.save(user);
 		Teacher teacher2 = new Teacher();
 		Teacher teacher3 = teacherService.save(teacher2);
 		Users user1 = new Users("teacher2",Crypt.hashWithSha256("teacher2"),"Erkan", "Tanyıldızlı");
@@ -64,6 +56,18 @@ public class ApiApplication extends SpringBootServletInitializer {
 		user1.setUserRole(UserRole.Teacher);
 		user1.setTeacher(teacher3);
 		userService.save(user1);
+	}
+
+	private Users initFatihOzkaynak(TeacherService teacherService, UserService userService){
+		Teacher teacher = new Teacher();
+		Teacher teacher1 = teacherService.save(teacher);
+		Users user = new Users("teacher",Crypt.hashWithSha256("teacher"),"fatih", "özkaynak");
+		user.setEmail("fatihözkaynak@gmail.com");
+		user.setImgURL("http://www.kriptarium.com/uploads/4/1/0/0/41002523/published/screenshot-2017-07-29-15-41-46.png?1501335230");
+		user.setUserRole(UserRole.Teacher);
+		user.setTeacher(teacher1);
+		userService.save(user);
+		return userService.findById("teacher");
 	}
 
 	private void initSecretary(SecretaryService secretaryService, UserService userService) {
@@ -76,34 +80,62 @@ public class ApiApplication extends SpringBootServletInitializer {
 		userService.save(user);
 	}
 
-	private void initClassroomAndStudentAndRollCall(ClassroomService classroomService, StudentService studentService, RollCallService rollCallService) {
+	private void initClassroomAndStudentAndRollCall(ClassroomService classroomService, StudentService studentService, UserService userService,
+	TeacherService teacherService) {
+		Users user = initFatihOzkaynak(teacherService, userService);
 		List<Classroom> classrooms = Arrays.asList(
-				new Classroom(null, null, "101", "Birinci Ders", SectionType.A, EducationType.First),
-				new Classroom(null, null, "102", "İkinci Ders", SectionType.A, EducationType.Second),
-				new Classroom(null, null, "103", "Üçüncü Ders", SectionType.B, EducationType.First)
+				new Classroom(
+						null,
+						null,
+						"101",
+						"Yazılım Mühendisliğinde Güncel Konular",
+						SectionType.A,
+						EducationType.First,
+						"3+2"),
+				new Classroom(
+						null,
+						null,
+						"102",
+						"Yazılım Mühendisliği Oryantasyonu",
+						SectionType.A,
+						EducationType.First,
+						"3+2")
 		);
 		List<Student> students = Arrays.asList(
 				new Student(Crypt.hashWithSha256("PARMAKIZI1"), null),
 				new Student(Crypt.hashWithSha256("PARMAKIZI2"), null),
-				new Student(Crypt.hashWithSha256("PARMAKIZI3"), null)
+				new Student(Crypt.hashWithSha256("PARMAKIZI3"), null),
+				new Student(Crypt.hashWithSha256("PARMAKIZI4"), null),
+				new Student(Crypt.hashWithSha256("PARMAKIZI5"), null),
+				new Student(Crypt.hashWithSha256("PARMAKIZI6"), null),
+				new Student(Crypt.hashWithSha256("PARMAKIZI7"), null)
 		);
+		List<Users> users = Arrays.asList(
+				new Users("deneme", "deneme","Hüseyin","Gürsoy"),
+				new Users("deneme1", "deneme1","Sertan","Sayımbay"),
+				new Users("deneme2", "deneme2","Yunus","Yılmaz"),
+				new Users("deneme3", "deneme3","Mert","Aydemir"),
+				new Users("deneme4", "deneme4","Emre","Güven"),
+				new Users("deneme5", "deneme5","Tunahan","Aydos"),
+				new Users("deneme6", "deneme6","Semih","Akyüz")
+		);
+		users.forEach(users1 -> users1.setUserRole(UserRole.Student));
 		students.forEach(studentService::save);
+		List<Student> savedStudent = studentService.findAll();
+		AtomicInteger count = new AtomicInteger();
+		users.forEach(users1 -> {
+			users1.setStudent(savedStudent.get(count.get()));
+			count.getAndIncrement();
+		});
+		users.forEach(userService::save);
+		classrooms.get(0).setStudents(savedStudent);
 		classrooms.forEach(classroomService::save);
-		List<Student> savedStudents = studentService.findAll();
-		List<RollCall> rollCalls = Arrays.asList(
-				new RollCall(savedStudents),
-				new RollCall(),
-				new RollCall()
-		);
-		rollCalls.forEach(rollCallService::save);
-		List<RollCall> savedRollCalls = rollCallService.findAll();
-		List<Classroom> savedClassrooms = classroomService.findAll();
-		savedClassrooms.forEach(classroom -> classroom.setStudents(savedStudents));
-		savedClassrooms.get(0).setRollCalls(savedRollCalls);
-		savedClassrooms.forEach(classroomService::save);
-		List<Classroom> dSavedClassroom = classroomService.findAll();
-		savedStudents.forEach(student -> student.setClassrooms(dSavedClassroom));
-		savedStudents.forEach(studentService::save);
+		List<Classroom> savedClassroom = classroomService.findAll();
+		Teacher teacher = user.getTeacher();
+		teacher.setClassrooms(savedClassroom);
+		Teacher teacher1 = teacherService.save(teacher);
+		user.setTeacher(teacher1);
+		userService.save(user);
 	}
 
 }

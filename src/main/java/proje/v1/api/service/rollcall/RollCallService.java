@@ -80,6 +80,16 @@ public class RollCallService {
         hashOperations.put(KEY, deviceId, rollCall);
     }
 
+    public void addToRollCall(Long deviceId, Long studentId) {
+        RollCall rollCall = (RollCall)hashOperations.get(KEY, deviceId);
+        if(rollCall == null)
+            throw new NotFoundException("Not found any roll call currently progress.");
+        Student student = studentService.findById(studentId);
+        checkStudentIsNotExist(rollCall, student);
+        rollCall.getInComingStudents().add(student);
+        hashOperations.put(KEY, deviceId, rollCall);
+    }
+
     private void checkStudentIsNotExist(RollCall rollCall, Student mStudent) {
         rollCall.getInComingStudents().forEach(student -> {
             if(student.getId().equals(mStudent.getId()))

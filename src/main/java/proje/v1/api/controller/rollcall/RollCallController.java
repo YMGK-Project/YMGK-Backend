@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import proje.v1.api.common.messages.Response;
 import proje.v1.api.common.util.BindingValidator;
+import proje.v1.api.message.rollcall.RequestManuelRollCallStudent;
 import proje.v1.api.message.rollcall.RequestRollCallStudent;
 import proje.v1.api.service.rollcall.RollCallService;
 
@@ -28,6 +29,14 @@ public class RollCallController {
     public Response<String> rollCallStudent(@Valid @RequestBody RequestRollCallStudent requestRollCallStudent, BindingResult bindingResult){
         BindingValidator.validate(bindingResult);
         rollCallService.addToRollCall(requestRollCallStudent.getDeviceId(), requestRollCallStudent.getFingerMark());
+        return new Response<>(200, true, "Student roll call successfully.");
+    }
+
+    @ApiOperation(value = "Yoklamaya manuel öğrenci eklemeyi sağlar")
+    @RequestMapping(value = "/students/manuel", method = RequestMethod.POST)
+    public Response<String> manuelRollCallStudent(@Valid @RequestBody RequestManuelRollCallStudent requestManuelRollCallStudent, BindingResult bindingResult){
+        BindingValidator.validate(bindingResult);
+        rollCallService.addToRollCall(requestManuelRollCallStudent.getDeviceId(), requestManuelRollCallStudent.getStudentId());
         return new Response<>(200, true, "Student roll call successfully.");
     }
 }

@@ -22,4 +22,5 @@ public class ClassroomDTO {
     private SectionType sectionType;
     private EducationType educationType;
     private int studentCount;
+    private String credit;
 }

@@ -2,6 +2,7 @@ package proje.v1.api.controller.teacher;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -10,17 +11,23 @@ import proje.v1.api.common.messages.Response;
 import proje.v1.api.common.util.BindingValidator;
 import proje.v1.api.converter.classroom.ClassroomConverter;
 import proje.v1.api.converter.rollcall.RollCallConverter;
+import proje.v1.api.converter.student.StudentConverter;
+import proje.v1.api.converter.user.UserConverter;
 import proje.v1.api.domian.classroom.Classroom;
 import proje.v1.api.domian.rollcall.RollCall;
+import proje.v1.api.domian.user.Users;
 import proje.v1.api.dto.classroom.ClassroomDTO;
 import proje.v1.api.dto.rollcall.RollCallDTO;
+import proje.v1.api.dto.user.UserDTO;
 import proje.v1.api.message.classroom.RequestClassroom;
 import proje.v1.api.message.teacher.RequestFinishRollCall;
+import proje.v1.api.message.teacher.RequestStartRollCall;
 import proje.v1.api.service.classroom.ClassroomService;
 import proje.v1.api.service.user.RoleService;
 import proje.v1.api.service.teacher.TeacherService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(description = "Öğretmen İşlemleri")
@@ -36,6 +43,8 @@ public class TeacherController {
     private ClassroomService classroomService;
     @Autowired
     private ClassroomConverter classroomConverter;
+    @Autowired
+    private UserConverter userConverter;
     @Autowired
     private RoleService roleService;
     private String TEACHER = "Teacher";
@@ -99,11 +108,13 @@ public class TeacherController {
     }
 
     @ApiOperation(value = "Öğretmenin yoklama başlatmasını sağlar")
-    @RequestMapping(value = "/classrooms/start/rollcall/{deviceId}", method = RequestMethod.GET)
-    public Response<String> startRollCall(@PathVariable Long deviceId){
+    @RequestMapping(value = "/classrooms/start/rollcall", method = RequestMethod.POST)
+    public Response<List<UserDTO>> startRollCall(@RequestBody RequestStartRollCall requestStartRollCall){
         roleService.validatePermission(ContextHolder.user, TEACHER);
-        teacherService.startRollCall(deviceId);
-        return new Response<>(200, true, "Yoklama başlatıldı.");
+        List<Users> users = teacherService.startRollCall(requestStartRollCall.getDeviceId(), requestStartRollCall.getClassroomId());
+        List<UserDTO> userDTOS = new ArrayList<>();
+        users.forEach(user -> userDTOS.add(userConverter.convert(user)));
+        return new Response<>(200, true, userDTOS);
     }
 
     @ApiOperation(value = "Öğretmenin yoklamayı bitirmesini sağlar")

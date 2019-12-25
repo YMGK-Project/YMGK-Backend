@@ -24,8 +24,11 @@ public class Classroom extends BaseModel {
     @JoinTable(name = "classroom_rollcals")
     @JsonIgnore
     private List<RollCall> rollCalls = new ArrayList<>();
-    @ManyToMany(mappedBy = "classrooms")
+    @ManyToMany
     @JsonIgnore
+    @JoinTable(
+            name = "classroom_students"
+    )
     private List<Student> students = new ArrayList<>();
     private String cod;
     private String name;
@@ -33,6 +36,7 @@ public class Classroom extends BaseModel {
     private SectionType sectionType;
     @Enumerated(value = EnumType.STRING)
     private EducationType educationType;
+    private String credit;
 
     public Classroom(String cod, String name, SectionType sectionType, EducationType educationType){
         this.cod = cod;
