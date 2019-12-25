@@ -88,6 +88,6 @@ public class TeacherService {
     }
 
     public RollCall getActiveRollCall(Long deviceId) {
-        return null;
+        return rollCallService.getActiveRollCall(deviceId);
     }
 }

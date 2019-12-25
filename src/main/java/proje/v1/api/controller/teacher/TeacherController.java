@@ -99,7 +99,7 @@ public class TeacherController {
     }
 
     @ApiOperation(value = "Öğretmenin yoklama başlatmasını sağlar")
-    @RequestMapping(value = "/classrooms/start/rollcall/{deviceId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/classrooms/start/rollcall/{deviceId}", method = RequestMethod.GET)
     public Response<String> startRollCall(@PathVariable Long deviceId){
         roleService.validatePermission(ContextHolder.user, TEACHER);
         teacherService.startRollCall(deviceId);

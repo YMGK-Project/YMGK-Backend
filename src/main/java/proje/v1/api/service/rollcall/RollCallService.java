@@ -75,7 +75,22 @@ public class RollCallService {
             throw new NotFoundException("Not found any roll call currently progress.");
         String hashedFingerMark = Crypt.hashWithSha256(fingerMark);
         Student student = studentService.findByFingerMark(hashedFingerMark);
+        checkStudentIsNotExist(rollCall, student);
         rollCall.getInComingStudents().add(student);
         hashOperations.put(KEY, deviceId, rollCall);
+    }
+
+    private void checkStudentIsNotExist(RollCall rollCall, Student mStudent) {
+        rollCall.getInComingStudents().forEach(student -> {
+            if(student.getId().equals(mStudent.getId()))
+                throw new BadRequestExcepiton("Student already in rollcall");
+        });
+    }
+
+    public RollCall getActiveRollCall(Long deviceId) {
+        RollCall rollCall = (RollCall)hashOperations.get(KEY, deviceId);
+        if(rollCall == null)
+            throw new NotFoundException("Not found any roll call currently progress.");
+        return rollCall;
     }
 }

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
+import org.springframework.data.redis.core.index.Indexed;
 import proje.v1.api.common.domain.BaseModel;
 import proje.v1.api.domian.classroom.Classroom;
 
@@ -21,7 +22,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Student extends BaseModel implements Serializable {
+public class Student extends BaseModel{
 
     private String fingerMark;
     @ManyToMany

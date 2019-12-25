@@ -2,13 +2,15 @@ package proje.v1.api.common.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.redis.core.index.Indexed;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 @MappedSuperclass
 @Getter
 @Setter
-public class BaseModel {
+public class BaseModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

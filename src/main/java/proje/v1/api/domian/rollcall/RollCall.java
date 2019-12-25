@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "rollcall")
-public class RollCall extends BaseModel implements Serializable {
+public class RollCall extends BaseModel{
 
     @OneToMany
     @JoinTable(name = "rollcall_incoming")
