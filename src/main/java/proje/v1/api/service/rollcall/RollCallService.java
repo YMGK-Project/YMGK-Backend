@@ -1,10 +1,13 @@
 package proje.v1.api.service.rollcall;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import proje.v1.api.common.util.Crypt;
+import proje.v1.api.common.util.RandomOperations;
 import proje.v1.api.domian.rollcall.RollCall;
 import proje.v1.api.domian.rollcall.RollCallRepository;
 import proje.v1.api.domian.student.Student;
@@ -21,13 +24,18 @@ public class RollCallService {
     private StudentService studentService;
     @Autowired
     private RollCallRepository rollCallRepository;
-    private RedisTemplate<String, RollCall> redisTemplate;
+    private RedisTemplate<String, RollCall> rollCallRedisTemplate;
+    private RedisTemplate<String, String> qrRedisTemplate;
     private HashOperations hashOperations;
+    private ValueOperations valueOperations;
     private final String KEY = "RollCall";
+    private final String QR_KEY = "QR";
 
-    public RollCallService(RedisTemplate<String, RollCall> redisTemplate){
-        this.redisTemplate = redisTemplate;
-        hashOperations = redisTemplate.opsForHash();
+    public RollCallService(RedisTemplate<String, RollCall> rollCallRedisTemplate, @Qualifier("QrTemplate") RedisTemplate<String, String> qrRedisTemplate){
+        this.rollCallRedisTemplate = rollCallRedisTemplate;
+        this.qrRedisTemplate = qrRedisTemplate;
+        hashOperations = rollCallRedisTemplate.opsForHash();
+        valueOperations = qrRedisTemplate.opsForValue();
     }
 
     public RollCall save(RollCall rollCall){
@@ -44,32 +52,38 @@ public class RollCallService {
         hashOperations.put(KEY, deviceId, rollCall);
     }
 
-    public void cancelRollCall(Long deviceId){
-        boolean isExist = isRollCallExist(deviceId);
-        if(isExist)
-            hashOperations.delete(KEY, deviceId);
-        throw new NotFoundException("Not found any roll call currently progress.");
+    public void startRollCallWith(Long classroomId) {
+        verifyRollCallIsNotAlreadyStarting(classroomId);
+        RollCall rollCall = new RollCall();
+        hashOperations.put(QR_KEY, classroomId, rollCall);
     }
 
-    private void verifyRollCallIsNotAlreadyStarting(Long deviceId){
-        if(isRollCallExist(deviceId))
+    public void cancelRollCall(Long classroomId){
+        boolean isExist = isRollCallExist(classroomId);
+        if(!isExist)
+            throw new NotFoundException("Not found any roll call currently progress.");
+        hashOperations.delete(QR_KEY, classroomId);
+    }
+
+    private void verifyRollCallIsNotAlreadyStarting(Long classroomId){
+        if(isRollCallExist(classroomId))
             throw new BadRequestExcepiton("Roll call already begin.");
     }
 
-    private boolean isRollCallExist(Long deviceId){
-        RollCall rollCall = (RollCall)hashOperations.get(KEY, deviceId);
+    private boolean isRollCallExist(Long classroomId){
+        RollCall rollCall = (RollCall)hashOperations.get(QR_KEY, classroomId);
         return rollCall != null;
     }
 
-    public RollCall finishRollCall(Long deviceId) {
-        RollCall rollCall = (RollCall)hashOperations.get(KEY, deviceId);
+    public RollCall finishRollCall(Long classroomId) {
+        RollCall rollCall = (RollCall)hashOperations.get(QR_KEY, classroomId);
         if(rollCall == null)
             throw new NotFoundException("Not found any roll call currently progress.");
-        hashOperations.delete(KEY, deviceId);
+        hashOperations.delete(QR_KEY, classroomId);
         return rollCall;
     }
 
-    public void addToRollCall(Long deviceId, String fingerMark) {
+    /*public void addToRollCall(Long deviceId, String fingerMark) {
         RollCall rollCall = (RollCall)hashOperations.get(KEY, deviceId);
         if(rollCall == null)
             throw new NotFoundException("Not found any roll call currently progress.");
@@ -78,7 +92,7 @@ public class RollCallService {
         checkStudentIsNotExist(rollCall, student);
         rollCall.getInComingStudents().add(student);
         hashOperations.put(KEY, deviceId, rollCall);
-    }
+    }*/
 
     public void addToRollCall(Long deviceId, Long studentId) {
         RollCall rollCall = (RollCall)hashOperations.get(KEY, deviceId);
@@ -90,6 +104,19 @@ public class RollCallService {
         hashOperations.put(KEY, deviceId, rollCall);
     }
 
+    public void addToRollCall(String qRCodeStr, Long studentId) {
+        Long classroomId = (long) (int) valueOperations.get(qRCodeStr);
+        System.out.println(classroomId);
+        System.out.println(qRCodeStr);
+        RollCall rollCall = (RollCall)hashOperations.get(QR_KEY, classroomId);
+        if(rollCall == null)
+            throw new NotFoundException("Not found any roll call currently progress.");
+        Student student = studentService.findById(studentId);
+        checkStudentIsNotExist(rollCall, student);
+        rollCall.getInComingStudents().add(student);
+        hashOperations.put(QR_KEY, classroomId, rollCall);
+    }
+
     private void checkStudentIsNotExist(RollCall rollCall, Student mStudent) {
         rollCall.getInComingStudents().forEach(student -> {
             if(student.getId().equals(mStudent.getId()))
@@ -97,10 +124,16 @@ public class RollCallService {
         });
     }
 
-    public RollCall getActiveRollCall(Long deviceId) {
-        RollCall rollCall = (RollCall)hashOperations.get(KEY, deviceId);
+    public RollCall getActiveRollCall(Long classroomId) {
+        RollCall rollCall = (RollCall)hashOperations.get(QR_KEY, classroomId);
         if(rollCall == null)
             throw new NotFoundException("Not found any roll call currently progress.");
         return rollCall;
+    }
+
+    public String generateQrCodeAndStorage(byte size, Long classroomId){
+        String qrString = new RandomOperations().generateRandomString(size);
+        valueOperations.append(qrString, classroomId.toString());
+        return qrString;
     }
 }

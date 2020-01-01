@@ -17,8 +17,17 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, RollCall> redisTemplate(){
+    public RedisTemplate<String, RollCall> RollCallTemplate(){
         RedisTemplate<String,RollCall> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(getJedisConnectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return redisTemplate;
+    }
+
+    @Bean
+    public RedisTemplate<String, String> QrTemplate(){
+        RedisTemplate<String,String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(getJedisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());

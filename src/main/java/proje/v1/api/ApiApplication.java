@@ -111,13 +111,13 @@ public class ApiApplication extends SpringBootServletInitializer {
 				new Student(Crypt.hashWithSha256("PARMAKIZI7"), null)
 		);
 		List<Users> users = Arrays.asList(
-				new Users("deneme", "deneme","Hüseyin","Gürsoy"),
-				new Users("deneme1", "deneme1","Sertan","Sayımbay"),
-				new Users("deneme2", "deneme2","Yunus","Yılmaz"),
-				new Users("deneme3", "deneme3","Mert","Aydemir"),
-				new Users("deneme4", "deneme4","Emre","Güven"),
-				new Users("deneme5", "deneme5","Tunahan","Aydos"),
-				new Users("deneme6", "deneme6","Semih","Akyüz")
+				new Users("deneme", Crypt.hashWithSha256("deneme"),"Hüseyin","Gürsoy"),
+				new Users("deneme1", Crypt.hashWithSha256("deneme1"),"Sertan","Sayımbay"),
+				new Users("deneme2", Crypt.hashWithSha256("deneme2"),"Yunus","Yılmaz"),
+				new Users("deneme3", Crypt.hashWithSha256("deneme3"),"Mert","Aydemir"),
+				new Users("deneme4", Crypt.hashWithSha256("deneme4"),"Emre","Güven"),
+				new Users("deneme5", Crypt.hashWithSha256("deneme5"),"Tunahan","Aydos"),
+				new Users("deneme6", Crypt.hashWithSha256("deneme6"),"Semih","Akyüz")
 		);
 		users.forEach(users1 -> users1.setUserRole(UserRole.Student));
 		students.forEach(studentService::save);

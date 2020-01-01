@@ -18,11 +18,13 @@ import proje.v1.api.domian.rollcall.RollCall;
 import proje.v1.api.domian.user.Users;
 import proje.v1.api.dto.classroom.ClassroomDTO;
 import proje.v1.api.dto.rollcall.RollCallDTO;
+import proje.v1.api.dto.rollcall.RollCallStartDTO;
 import proje.v1.api.dto.user.UserDTO;
 import proje.v1.api.message.classroom.RequestClassroom;
 import proje.v1.api.message.teacher.RequestFinishRollCall;
 import proje.v1.api.message.teacher.RequestStartRollCall;
 import proje.v1.api.service.classroom.ClassroomService;
+import proje.v1.api.service.rollcall.RollCallService;
 import proje.v1.api.service.user.RoleService;
 import proje.v1.api.service.teacher.TeacherService;
 
@@ -45,6 +47,8 @@ public class TeacherController {
     private ClassroomConverter classroomConverter;
     @Autowired
     private UserConverter userConverter;
+    @Autowired
+    private RollCallService rollCallService;
     @Autowired
     private RoleService roleService;
     private String TEACHER = "Teacher";
@@ -107,31 +111,32 @@ public class TeacherController {
         return new Response<>(200, true, classroomDTOS);
     }
 
-    @ApiOperation(value = "Öğretmenin yoklama başlatmasını sağlar")
+    @ApiOperation(value = "Öğretmenin qrCode ile yoklama başlatmasını sağlar")
     @RequestMapping(value = "/classrooms/start/rollcall", method = RequestMethod.POST)
-    public Response<List<UserDTO>> startRollCall(@RequestBody RequestStartRollCall requestStartRollCall){
+    public Response<RollCallStartDTO> startRollCall(@RequestParam Long classroomId){
         roleService.validatePermission(ContextHolder.user, TEACHER);
-        List<Users> users = teacherService.startRollCall(requestStartRollCall.getDeviceId(), requestStartRollCall.getClassroomId());
+        List<Users> users = teacherService.startRollCall(classroomId);
+        String qrCodeStr = rollCallService.generateQrCodeAndStorage((byte)30, classroomId);
         List<UserDTO> userDTOS = new ArrayList<>();
         users.forEach(user -> userDTOS.add(userConverter.convert(user)));
-        return new Response<>(200, true, userDTOS);
+        return new Response<>(200, true, new RollCallStartDTO(userDTOS, qrCodeStr));
     }
 
+    //qr code silinecek
     @ApiOperation(value = "Öğretmenin yoklamayı bitirmesini sağlar")
     @RequestMapping(value = "/classrooms/finish/rollcall", method = RequestMethod.POST)
-    public Response<RollCallDTO> finishRollCall(@Valid @RequestBody RequestFinishRollCall requestFinishRollCall, BindingResult bindingResult){
-        BindingValidator.validate(bindingResult);
+    public Response<RollCallDTO> finishRollCall(@RequestParam Long classroomId){
         roleService.validatePermission(ContextHolder.user, TEACHER);
-        RollCall rollCall = teacherService.finishRollCall(requestFinishRollCall.getClassroomId(), requestFinishRollCall.getDeviceId());
+        RollCall rollCall = teacherService.finishRollCall(classroomId);
         RollCallDTO rollCallDTO = rollCallConverter.convert(rollCall);
         return new Response<>(201, true, rollCallDTO);
     }
 
     @ApiOperation(value = "Öğretmenin aktif yoklama listesini almasını sağlar")
-    @RequestMapping(value = "/classrooms/now/rollcall/{deviceId}", method = RequestMethod.GET)
-    public Response<RollCallDTO> getActiveRollCall(@PathVariable Long deviceId){
+    @RequestMapping(value = "/classrooms/now/rollcall/{classroomId}", method = RequestMethod.GET)
+    public Response<RollCallDTO> getActiveRollCall(@PathVariable Long classroomId){
         roleService.validatePermission(ContextHolder.user, TEACHER);
-        RollCall rollCall = teacherService.getActiveRollCall(deviceId);
+        RollCall rollCall = teacherService.getActiveRollCall(classroomId);
         RollCallDTO rollCallDTO = rollCallConverter.convert(rollCall);
         return new Response<>(200, true, rollCallDTO);
     }

@@ -10,6 +10,7 @@ import proje.v1.api.domian.rollcall.RollCall;
 import proje.v1.api.domian.teacher.Teacher;
 import proje.v1.api.domian.teacher.TeacherRepository;
 import proje.v1.api.domian.user.Users;
+import proje.v1.api.dto.rollcall.RollCallDTO;
 import proje.v1.api.exception.NotFoundException;
 import proje.v1.api.service.classroom.ClassroomService;
 import proje.v1.api.service.rollcall.RollCallService;
@@ -53,17 +54,17 @@ public class TeacherService {
         return teacher.getClassrooms();
     }
 
-    public List<Users> startRollCall(Long deviceId, Long classroomId) {
-        rollCallService.startRollCall(deviceId);
+    public List<Users> startRollCall(Long classroomId) {
+        rollCallService.startRollCallWith(classroomId);
         Classroom classroom = classroomService.findById(classroomId);
         List<Users> users = new ArrayList<>();
         classroom.getStudents().forEach(student -> users.add(userService.findByStudent(student.getId())));
         return users;
     }
 
-    public RollCall finishRollCall(Long classroomId, Long deviceId) {
+    public RollCall finishRollCall(Long classroomId) {
         Classroom classroom = classroomService.findBy(classroomId);
-        RollCall rollCall = rollCallService.finishRollCall(deviceId);
+        RollCall rollCall = rollCallService.finishRollCall(classroomId);
         rollCall.getInComingStudents().forEach(studentService::save);
         rollCall.getNonStudents().forEach(studentService::save);
         RollCall savedRollCall = rollCallService.save(rollCall);
@@ -99,4 +100,6 @@ public class TeacherService {
     public RollCall getActiveRollCall(Long deviceId) {
         return rollCallService.getActiveRollCall(deviceId);
     }
+
+
 }
