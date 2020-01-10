@@ -102,4 +102,12 @@ public class TeacherService {
     }
 
 
+    public void startRollCallWithFinger(String studentIds) {
+        int i=1;
+        List<Integer> ids= new ArrayList<Integer>();
+        for (int j=0;j<studentIds.length();j++){
+            ids.add(Character.getNumericValue(studentIds.charAt(j)));
+        }
+        ids.forEach(a -> System.out.println(a));
+    }
 }

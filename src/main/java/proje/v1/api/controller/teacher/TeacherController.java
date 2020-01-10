@@ -121,6 +121,13 @@ public class TeacherController {
         users.forEach(user -> userDTOS.add(userConverter.convert(user)));
         return new Response<>(200, true, new RollCallStartDTO(userDTOS, qrCodeStr));
     }
+    @ApiOperation(value = "Öğretmenin parmak izi ile yoklama başlatmasını sağlar")
+    @RequestMapping(value = "/classrooms/start/rollcallwithfinger", method = RequestMethod.POST)
+    public void startRollCallWithFinger(@RequestParam String studentIds){
+        roleService.validatePermission(ContextHolder.user, TEACHER);
+        teacherService.startRollCallWithFinger(studentIds);
+
+    }
 
     //qr code silinecek
     @ApiOperation(value = "Öğretmenin yoklamayı bitirmesini sağlar")

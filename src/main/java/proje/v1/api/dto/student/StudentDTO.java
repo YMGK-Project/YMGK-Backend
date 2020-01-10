@@ -12,5 +12,7 @@ import lombok.Setter;
 public class StudentDTO {
 
     private Long id;
+    private int studentId;
+    private String studentNo;
     private String fingerMark;
 }

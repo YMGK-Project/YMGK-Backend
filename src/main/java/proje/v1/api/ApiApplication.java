@@ -102,13 +102,13 @@ public class ApiApplication extends SpringBootServletInitializer {
 						"3+2")
 		);
 		List<Student> students = Arrays.asList(
-				new Student(Crypt.hashWithSha256("PARMAKIZI1"), null),
-				new Student(Crypt.hashWithSha256("PARMAKIZI2"), null),
-				new Student(Crypt.hashWithSha256("PARMAKIZI3"), null),
-				new Student(Crypt.hashWithSha256("PARMAKIZI4"), null),
-				new Student(Crypt.hashWithSha256("PARMAKIZI5"), null),
-				new Student(Crypt.hashWithSha256("PARMAKIZI6"), null),
-				new Student(Crypt.hashWithSha256("PARMAKIZI7"), null)
+				new Student(Crypt.hashWithSha256("PARMAKIZI1"),9,"123450" ,null),
+				new Student(Crypt.hashWithSha256("PARMAKIZI2"),10,"123451", null),
+				new Student(Crypt.hashWithSha256("PARMAKIZI3"),11,"123452", null),
+				new Student(Crypt.hashWithSha256("PARMAKIZI4"),12,"123453", null),
+				new Student(Crypt.hashWithSha256("PARMAKIZI5"),13,"123454", null),
+				new Student(Crypt.hashWithSha256("PARMAKIZI6"),14,"123455", null),
+				new Student(Crypt.hashWithSha256("PARMAKIZI7"),15,"123456", null)
 		);
 		List<Users> users = Arrays.asList(
 				new Users("deneme", Crypt.hashWithSha256("deneme"),"Hüseyin","Gürsoy"),

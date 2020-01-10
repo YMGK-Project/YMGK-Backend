@@ -17,10 +17,14 @@ public class RequestStudent {
     private String username;
     @NotNull @Size(min = 6, max = 26)
     private String password;
-    @NotNull
+
     private String fingerMark;
     @NotNull
     private String name;
     @NotNull
     private String surname;
+    @NotNull
+    private int studentId;
+    @NotNull
+    private String studentNo;
 }

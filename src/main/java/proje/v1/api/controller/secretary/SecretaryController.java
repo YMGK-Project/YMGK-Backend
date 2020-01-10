@@ -108,6 +108,8 @@ public class SecretaryController {
                 requestStudent.getUsername(),
                 requestStudent.getPassword(),
                 requestStudent.getFingerMark(),
+                requestStudent.getStudentId(),
+                requestStudent.getStudentNo(),
                 requestStudent.getName(),
                 requestStudent.getSurname());
         UserDTO userDTO = userConverter.convert(user);

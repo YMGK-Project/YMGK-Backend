@@ -11,7 +11,7 @@ import java.util.List;
 public class StudentConverter implements Converter<Student, StudentDTO> {
     @Override
     public StudentDTO convert(Student student) {
-        return new StudentDTO(student.getId(), student.getFingerMark());
+        return new StudentDTO(student.getId(),student.getStudentId(),student.getStudentNo(), student.getFingerMark());
     }
 
     public List<StudentDTO> convert(List<Student> students){

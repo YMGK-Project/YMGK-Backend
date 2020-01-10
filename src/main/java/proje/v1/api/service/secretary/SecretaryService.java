@@ -48,11 +48,13 @@ public class SecretaryService {
         return userService.saveAndGet(user);
     }
 
-    public Users saveStudentAndGet(String email, String username, String password, String fingerMark, String name, String surname) {
+    public Users saveStudentAndGet(String email, String username, String password, String fingerMark, int studentId,String studentNo, String name, String surname) {
         userService.validateUserIsNotExist(username);
         Student student = new Student();
-        String fingerMarkWithHash = Crypt.hashWithSha256(fingerMark);
-        student.setFingerMark(fingerMarkWithHash);
+       // String fingerMarkWithHash = Crypt.hashWithSha256(fingerMark);
+       // student.setFingerMark(fingerMarkWithHash);
+        student.setStudentId(studentId);
+        student.setStudentNo(studentNo);
         Student student1 = studentService.save(student);
         String passwordWithHash = Crypt.hashWithSha256(password);
         Users user = new Users(username, passwordWithHash, name, surname);
