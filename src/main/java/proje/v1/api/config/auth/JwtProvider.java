@@ -11,7 +11,7 @@ import java.util.Date;
 public class JwtProvider {
 
     private String secretKey = "merhabadünya123";
-    private int expiration = 600000;
+    private int expiration = 6000000;
 
     String getJwtFromHeader(String authHeader){
         if(authHeader != null && authHeader.startsWith(SecurityConstants.TOKEN_PREFIX))

@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Optional<Student> findByFingerMark(String fingerMark);
+    Optional<Student> findByStudentId(int studentId);
 }

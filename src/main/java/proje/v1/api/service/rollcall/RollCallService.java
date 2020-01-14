@@ -136,4 +136,8 @@ public class RollCallService {
         valueOperations.append(qrString, classroomId.toString());
         return qrString;
     }
+
+    public void deleteQrCode(Long classroomId) {
+        hashOperations.delete(QR_KEY, classroomId);
+    }
 }

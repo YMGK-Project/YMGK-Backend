@@ -19,11 +19,11 @@ import java.util.List;
 @Entity(name = "rollcall")
 public class RollCall extends BaseModel{
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "rollcall_incoming")
     @JsonIgnore
     private List<Student> inComingStudents = new ArrayList<>();
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "rollcall_non")
     @JsonIgnore
     private List<Student> nonStudents = new ArrayList<>();

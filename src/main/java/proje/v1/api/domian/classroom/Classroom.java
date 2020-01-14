@@ -37,6 +37,7 @@ public class Classroom extends BaseModel {
     @Enumerated(value = EnumType.STRING)
     private EducationType educationType;
     private String credit;
+    private int studentCount;
 
     public Classroom(String cod, String name, SectionType sectionType, EducationType educationType){
         this.cod = cod;

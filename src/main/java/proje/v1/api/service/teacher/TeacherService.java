@@ -7,6 +7,7 @@ import proje.v1.api.domian.classroom.ClassroomRepository;
 import proje.v1.api.domian.classroom.EducationType;
 import proje.v1.api.domian.classroom.SectionType;
 import proje.v1.api.domian.rollcall.RollCall;
+import proje.v1.api.domian.student.Student;
 import proje.v1.api.domian.teacher.Teacher;
 import proje.v1.api.domian.teacher.TeacherRepository;
 import proje.v1.api.domian.user.Users;
@@ -19,7 +20,9 @@ import proje.v1.api.service.user.UserService;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TeacherService {
@@ -65,12 +68,34 @@ public class TeacherService {
     public RollCall finishRollCall(Long classroomId) {
         Classroom classroom = classroomService.findBy(classroomId);
         RollCall rollCall = rollCallService.finishRollCall(classroomId);
+        rollCallService.deleteQrCode(classroomId);
+        List<Student> nonComeStudent = findDiffStudentLists(classroom.getStudents(), rollCall.getInComingStudents());
+        rollCall.setNonStudents(nonComeStudent);
         rollCall.getInComingStudents().forEach(studentService::save);
         rollCall.getNonStudents().forEach(studentService::save);
+        System.out.println(rollCall.getId()+" id ");
         RollCall savedRollCall = rollCallService.save(rollCall);
+        System.out.println(rollCall.getId()+" id ");
         classroom.getRollCalls().add(savedRollCall);
         classroomService.save(classroom);
         return savedRollCall;
+    }
+
+    private List<Student> findDiffStudentLists(List<Student> firstList, List<Student> secondList){
+        int len = firstList.size();
+        int len2 = secondList.size();
+        List<Student> students = new ArrayList<>();
+        boolean status = true;
+        for(int i = 0; i < len; i++) {
+            for(int j = 0; j < len2; j++) {
+               if(firstList.get(i).getId().equals(secondList.get(j).getId()))
+                   status = false;
+            }
+            if(status)
+                students.add(firstList.get(i));
+            status = true;
+        }
+        return students;
     }
 
     public void cancelRollCall(Long deviceId) {
@@ -102,12 +127,24 @@ public class TeacherService {
     }
 
 
-    public void startRollCallWithFinger(String studentIds) {
-        int i=1;
-        List<Integer> ids= new ArrayList<Integer>();
-        for (int j=0;j<studentIds.length();j++){
-            ids.add(Character.getNumericValue(studentIds.charAt(j)));
+    public RollCall finishRollCallWithFinger(String studentIds) {
+        RollCall rollCall = new RollCall();
+        Classroom classroom = classroomService.findBy(9L);
+        for (int count=1; count < studentIds.length() ; count++){
+            Student student = studentService.findByStudentId(count);
+            if(studentIds.charAt(count) == '1')
+                rollCall.getInComingStudents().add(student);
+            else
+                rollCall.getNonStudents().add(student);
         }
-        ids.forEach(a -> System.out.println(a));
+        RollCall savedRollCall = rollCallService.save(rollCall);
+        classroom.getRollCalls().add(savedRollCall);
+        classroomService.save(classroom);
+        return savedRollCall;
+    }
+
+    public List<RollCall> getClassroomRollCalls(Long id) {
+        Classroom classroom = classroomService.findById(id);
+        return classroom.getRollCalls();
     }
 }

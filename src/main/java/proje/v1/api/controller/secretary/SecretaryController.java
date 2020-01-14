@@ -107,8 +107,6 @@ public class SecretaryController {
                 requestStudent.getEmail(),
                 requestStudent.getUsername(),
                 requestStudent.getPassword(),
-                requestStudent.getFingerMark(),
-                requestStudent.getStudentId(),
                 requestStudent.getStudentNo(),
                 requestStudent.getName(),
                 requestStudent.getSurname());

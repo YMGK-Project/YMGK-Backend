@@ -24,6 +24,10 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
+    public Student findByStudentId(int studentId){
+        return studentRepository.findByStudentId(studentId).orElseThrow(() -> new NotFoundException("not found any student"));
+    }
+
     public List<Classroom> findAllClassroomBy(Long id) {
         Student student = studentRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("User Not Found"));

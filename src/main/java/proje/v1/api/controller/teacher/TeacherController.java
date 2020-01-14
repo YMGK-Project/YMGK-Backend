@@ -122,14 +122,24 @@ public class TeacherController {
         return new Response<>(200, true, new RollCallStartDTO(userDTOS, qrCodeStr));
     }
     @ApiOperation(value = "Öğretmenin parmak izi ile yoklama başlatmasını sağlar")
-    @RequestMapping(value = "/classrooms/start/rollcallwithfinger", method = RequestMethod.POST)
-    public void startRollCallWithFinger(@RequestParam String studentIds){
+    @RequestMapping(value = "/classrooms/finish/rollcallwithfinger", method = RequestMethod.POST)
+    public Response<RollCallDTO> startRollCallWithFinger(@RequestParam String studentIds){
         roleService.validatePermission(ContextHolder.user, TEACHER);
-        teacherService.startRollCallWithFinger(studentIds);
-
+        RollCall rollCall = teacherService.finishRollCallWithFinger(studentIds);
+        RollCallDTO rollCallDTO = rollCallConverter.convert(rollCall);
+        return new Response<>(200, true, rollCallDTO);
     }
 
-    //qr code silinecek
+    @ApiOperation(value = "Öğretmenin verilen id deki dersin yoklamalarını almasını sağlar")
+    @RequestMapping(value = "/classrooms/{id}/rollcalls", method = RequestMethod.GET)
+    public Response<List<RollCallDTO>> getClassroomRollcalls(@PathVariable Long id){
+        roleService.validatePermission(ContextHolder.user, TEACHER);
+        List<RollCall> rollCalls = teacherService.getClassroomRollCalls(id);
+        List<RollCallDTO> rollCallDTOS = new ArrayList<>();
+        rollCalls.forEach(rollCall -> rollCallDTOS.add(rollCallConverter.convert(rollCall)));
+        return new Response<>(200, true, rollCallDTOS);
+    }
+
     @ApiOperation(value = "Öğretmenin yoklamayı bitirmesini sağlar")
     @RequestMapping(value = "/classrooms/finish/rollcall", method = RequestMethod.POST)
     public Response<RollCallDTO> finishRollCall(@RequestParam Long classroomId){

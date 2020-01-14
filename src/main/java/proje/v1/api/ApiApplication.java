@@ -91,7 +91,7 @@ public class ApiApplication extends SpringBootServletInitializer {
 						"Yazılım Mühendisliğinde Güncel Konular",
 						SectionType.A,
 						EducationType.First,
-						"3+2"),
+						"3+2",1),
 				new Classroom(
 						null,
 						null,
@@ -99,7 +99,7 @@ public class ApiApplication extends SpringBootServletInitializer {
 						"Yazılım Mühendisliği Oryantasyonu",
 						SectionType.A,
 						EducationType.First,
-						"3+2")
+						"3+2",1)
 		);
 		List<Student> students = Arrays.asList(
 				new Student(Crypt.hashWithSha256("PARMAKIZI1"),9,"123450" ,null),

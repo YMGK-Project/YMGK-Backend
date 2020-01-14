@@ -34,6 +34,8 @@ public class SecretaryService {
     @Autowired
     private SecretaryRepository secretaryRepository;
     @Autowired
+    private ClassroomService classroomService;
+    @Autowired
     private TeacherRepository teacherRepository;
 
     public Users saveTeacherAndGet(String email, String username, String password, String name, String surname) {
@@ -48,14 +50,22 @@ public class SecretaryService {
         return userService.saveAndGet(user);
     }
 
-    public Users saveStudentAndGet(String email, String username, String password, String fingerMark, int studentId,String studentNo, String name, String surname) {
-        userService.validateUserIsNotExist(username);
+    public Users saveStudentAndGet(String email, String username, String password,String studentNo, String name, String surname) {
         Student student = new Student();
        // String fingerMarkWithHash = Crypt.hashWithSha256(fingerMark);
        // student.setFingerMark(fingerMarkWithHash);
-        student.setStudentId(studentId);
+        Long classroomId = 9L;
+        Long classroomId2 = 10L;
+        Classroom ymgk = classroomService.findBy(classroomId);
+        Classroom ymga = classroomService.findById(classroomId2);
+        student.setStudentId(ymgk.getStudentCount());
+        ymgk.setStudentCount(ymgk.getStudentCount()+1);
         student.setStudentNo(studentNo);
         Student student1 = studentService.save(student);
+        ymgk.getStudents().add(student1);
+        ymga.getStudents().add(student1);
+        classroomService.save(ymga);
+        classroomService.save(ymgk);
         String passwordWithHash = Crypt.hashWithSha256(password);
         Users user = new Users(username, passwordWithHash, name, surname);
         user.setStudent(student1);
