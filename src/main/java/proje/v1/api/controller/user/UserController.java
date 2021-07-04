@@ -17,7 +17,7 @@ import proje.v1.api.message.user.RequestPasswordForgot;
 import proje.v1.api.service.user.RoleService;
 import proje.v1.api.service.user.TemporaryTokenHolderService;
 import proje.v1.api.service.user.UserService;
-
+import proje.v1.api.service.email.checkPasswordChange;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -75,4 +75,16 @@ public class UserController {
         UserDTO userDTO = userConverter.convert(user);
         return new Response<>(200,true,userDTO);
     }
+   @RequestMapping(value="/rest/password/{token}/update",method=RequestMethod.POST)
+   public Response<String> resetPasswordSuccess(@PathVariable("token") String token,@Valid @RequestBody RequestPasswordChange requestPasswordChange,BindingResult bindingResult) {
+	BindingValidator.validate(bindingResult);
+	temporaryTokenHolderService.validateToken(token);
+	boolean status=checkPasswordChange(requestPasswordChange.getOldPassword(),requestPasswordChange.getNetPassword());
+	if (status) {
+		Users users=temporaryTokenHolderService.findById(token).getUsers();
+		users.setPassword(Crypt.hashWithSha256(requestPasswordChange.getOldPassword()))
+		return new Response<> (200,true,"şifre değiştirildi");
+	}
+	return new Response<>(400,false,"hata oluştu");
+  }
 }
